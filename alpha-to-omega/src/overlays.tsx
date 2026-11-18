@@ -87,13 +87,15 @@ export const VhsLayer: React.FC = () => {
       />
       {/* lifted blacks */}
       <AbsoluteFill style={{ backgroundColor: "rgba(12,24,28,0.12)", mixBlendMode: "lighten" }} />
-      {/* grain */}
-      <svg width={W} height={H} style={{ position: "absolute", opacity: 0.16, mixBlendMode: "overlay" }}>
-        <filter id="grain">
-          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={2} seed={f} />
-          <feColorMatrix type="saturate" values="0" />
+      {/* film grain, ~8%: a normal-blend layer so it also lives in the shadows (overlay alone vanishes on black),
+          plus a softer overlay pass for midtone texture. New noise every frame. */}
+      <svg width={W} height={H} style={{ position: "absolute" }}>
+        <filter id="grain" x="0" y="0" width="1" height="1">
+          <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves={2} seed={f} result="n" />
+          <feColorMatrix in="n" type="saturate" values="0" />
         </filter>
-        <rect width="100%" height="100%" filter="url(#grain)" />
+        <rect width="100%" height="100%" filter="url(#grain)" opacity={0.08} />
+        <rect width="100%" height="100%" filter="url(#grain)" opacity={0.12} style={{ mixBlendMode: "overlay" }} />
       </svg>
       {/* scanlines */}
       <AbsoluteFill

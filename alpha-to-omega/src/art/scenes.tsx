@@ -4,14 +4,17 @@ import {
   ArtProps,
   Bg,
   C,
+  CloudLayer,
   CloudMass,
   Cross,
   Dove,
   Figure,
   Hand,
+  Mist,
   Orb,
   SkyBg,
   ThornRing,
+  Wing,
   wavePath,
 } from "./common";
 
@@ -138,16 +141,20 @@ export const Sunrise: Art = ({ vw, vh, t }) => {
   );
 };
 
-export const FigureScene: Art = ({ vw, vh, t, p }) => (
+export const FigureScene: Art = ({ vw, vh, t, f, p }) => (
   <>
-    <Bg vw={vw} vh={vh} fill="#050607" />
-    <Orb r={620} opacity={0.12} />
+    <SkyBg vw={vw} vh={vh} id="fig-sky" stops={[[0, "#07090c"], [0.55, "#1b2329"], [1, "#050607"]]} />
+    <Orb r={560} y={-60} opacity={0.4} />
+    <Orb r={220} y={-60} opacity={0.6} />
+    <Mist id="fig" y={330} vw={vw} h={300} f={f} color="#c9d4d8" opacity={0.55} />
     <Figure
+      variant="backlit"
       pose={(p.pose as "walk") ?? "stand"}
       x={Number(p.x ?? 0) + (p.pose === "walk" ? t * 40 : 0)}
       s={Number(p.s ?? 0.8)}
       y={40}
     />
+    <Mist id="fig2" y={400} vw={vw} h={220} f={-f} color="#aebcc2" opacity={0.45} />
   </>
 );
 
@@ -345,17 +352,22 @@ export const RoseWindow: Art = ({ vw, vh, t }) => {
 
 export const WaterWalk: Art = ({ vw, vh, t, f }) => (
   <>
-    <SkyBg vw={vw} vh={vh} id="ww-sky" stops={[[0, "#03070c"], [0.55, "#0e2433"], [1, "#03070c"]]} />
-    <CloudMass seed="ww" x={0} y={-vh / 3} w={vw * 1.4} h={500} fill="#1b3444" opacity={0.8} />
-    {Array.from({ length: 50 }, (_, i) => {
+    <SkyBg vw={vw} vh={vh} id="ww-sky" stops={[[0, "#020509"], [0.5, "#11293a"], [0.62, "#2c4b5c"], [1, "#02070b"]]} />
+    <g transform={`translate(${-f * 3} 0)`}>
+      <CloudLayer id="ww-a" x={0} y={-vh * 0.3} w={vw * 1.6} h={vh * 0.65} fill="#0c1c26" hi="#6f93a8" seed={41} density={0.62} />
+    </g>
+    {/* moon/lightning backlight behind the figure */}
+    <Orb r={lerp(t, 420, 520)} y={-120} opacity={0.55} />
+    <Orb r={160} y={-160} opacity={0.9} />
+    {Array.from({ length: 60 }, (_, i) => {
       const x = (random(`rx${i}`) - 0.5) * vw * 1.3;
       const y = ((random(`ry${i}`) * vh + f * 70) % vh) - vh / 2;
-      return <line key={i} x1={x} y1={y} x2={x - 30} y2={y + 110} stroke="#9fc4d6" strokeOpacity={0.35} strokeWidth={3} />;
+      return <line key={i} x1={x} y1={y} x2={x - 30} y2={y + 110} stroke="#9fc4d6" strokeOpacity={0.28} strokeWidth={2.5} />;
     })}
-    <Orb r={lerp(t, 380, 460)} opacity={0.35} y={20} />
-    <Figure pose="stand" s={0.78} y={40} />
-    <ellipse cx={0} cy={300} rx={lerp(t, 160, 260)} ry={30} fill="#cfefff" opacity={0.45} filter="url(#blur-s)" />
     <path d={wavePath(vw, vh, 290, 26, 300, f * 0.35)} fill="#0b2230" opacity={0.85} />
+    <Figure variant="backlit" rim="#e6f4ff" pose="stand" s={0.8} y={30} />
+    <ellipse cx={0} cy={292} rx={lerp(t, 150, 230)} ry={16} fill="#dff4ff" opacity={0.3} filter="url(#blur-m)" />
+    <Mist id="ww" y={300} vw={vw} h={220} f={f} color="#b9d6e2" opacity={0.6} />
     <path d={wavePath(vw, vh, 360, 55, 460, -f * 0.3 + 1)} fill="#081923" />
     <path d={wavePath(vw, vh, 470, 70, 380, f * 0.25 + 2)} fill="#040e14" />
   </>
@@ -401,15 +413,16 @@ export const ThreeCrosses: Art = ({ vw, vh, t, f }) => (
   </>
 );
 
-export const ArmsGold: Art = ({ vw, vh, t }) => (
+export const ArmsGold: Art = ({ vw, vh, t, f }) => (
   <>
-    <Bg vw={vw} vh={vh} fill="#2a1604" />
-    <Orb r={lerp(t, 700, 900)} color="gold" />
-    <Orb r={lerp(t, 260, 380)} y={-180} />
+    <Bg vw={vw} vh={vh} fill="#1e0f03" />
+    <Orb r={lerp(t, 700, 900)} color="gold" y={-160} />
+    <Orb r={lerp(t, 240, 340)} y={-200} />
     {Array.from({ length: 28 }, (_, i) => (
-      <line key={i} x1={0} y1={-180} x2={0} y2={-1500} stroke="#fff3cf" strokeOpacity={0.22} strokeWidth={24} transform={`rotate(${(i / 28) * 360 + t * 8} 0 -180)`} />
+      <line key={i} x1={0} y1={-200} x2={0} y2={-1500} stroke="#fff3cf" strokeOpacity={0.16} strokeWidth={26} filter="url(#blur-s)" transform={`rotate(${(i / 28) * 360 + t * 8} 0 -200)`} />
     ))}
-    <Figure pose="arms" s={1.05} y={40} fill="#0a0602" glow={false} />
+    <Mist id="arms" y={330} vw={vw} h={300} f={f} color="#f6d79a" opacity={0.55} />
+    <Figure variant="backlit" rim="#ffe3a1" pose="arms" s={1.05} y={40} fill="#0a0602" />
   </>
 );
 
@@ -595,18 +608,30 @@ export const Eruption: Art = ({ vw, vh, t }) => {
   );
 };
 
-export const Clouds: Art = ({ vw, vh, t }) => (
-  <>
-    <SkyBg vw={vw} vh={vh} id="cl-sky" stops={[[0, "#c9d2d6"], [1, "#4a5560"]]} />
-    <Orb r={lerp(t, 300, 600)} />
-    <g transform={`translate(${-lerp(t, 0, 260)} ${-lerp(t, 0, 80)})`}>
-      <CloudMass seed="cla" x={-vw / 3} y={-vh / 6} w={vw * 0.8} h={vh * 0.8} fill="#2a3036" n={20} />
-    </g>
-    <g transform={`translate(${lerp(t, 0, 260)} ${lerp(t, 0, 80)})`}>
-      <CloudMass seed="clb" x={vw / 3} y={vh / 6} w={vw * 0.8} h={vh * 0.8} fill="#1c2024" n={20} />
-    </g>
-  </>
-);
+export const Clouds: Art = ({ vw, vh, t, f }) => {
+  const part = lerp(t, 0, 1);
+  return (
+    <>
+      <SkyBg vw={vw} vh={vh} id="cl-sky" stops={[[0, "#e9eef0"], [0.5, "#fff8e6"], [1, "#9aa8b2"]]} />
+      <Orb r={lerp(t, 320, 640)} />
+      {/* god rays */}
+      <g opacity={0.35 + part * 0.35} filter="url(#blur-m)">
+        {Array.from({ length: 14 }, (_, i) => (
+          <polygon key={i} points={`-14,0 14,0 ${90 + i * 4},1300 ${-90 - i * 4},1300`} fill="#fffbe8" transform={`rotate(${(i - 6.5) * 13 + 180})`} />
+        ))}
+      </g>
+      <g transform={`translate(${-lerp(t, 40, 340)} ${-lerp(t, 0, 60)})`}>
+        <CloudLayer id="cl-l" x={-vw * 0.38} y={0} w={vw * 1.1} h={vh * 1.2} fill="#1d2329" hi="#fff1cf" seed={17} density={0.74} azimuth={0} elevation={18} light={0.95} />
+      </g>
+      <g transform={`translate(${lerp(t, 40, 340)} ${lerp(t, 0, 60)})`}>
+        <CloudLayer id="cl-r" x={vw * 0.38} y={0} w={vw * 1.1} h={vh * 1.2} fill="#1a1f25" hi="#fff1cf" seed={29} density={0.74} azimuth={180} elevation={18} light={0.95} />
+      </g>
+      <g transform={`translate(${-f * 6} 0)`}>
+        <CloudLayer id="cl-f" x={0} y={vh * 0.36} w={vw * 1.6} h={vh * 0.5} fill="#121519" hi="#bdb39b" seed={53} density={0.6} light={0.5} />
+      </g>
+    </>
+  );
+};
 
 export const Doves: Art = ({ vw, vh, t, f }) => (
   <>
@@ -630,35 +655,26 @@ export const Doves: Art = ({ vw, vh, t, f }) => (
   </>
 );
 
-export const Wings: Art = ({ vw, vh, t }) => {
-  const spread = lerp(t, 0.85, 1);
-  const feathers = (side: 1 | -1) =>
-    Array.from({ length: 16 }, (_, i) => {
-      const a = 8 + i * 6.5; // degrees above horizontal → up
-      const len = 380 + i * 22;
-      return (
-        <ellipse
-          key={i}
-          cx={len / 2}
-          cy={0}
-          rx={len / 2}
-          ry={20}
-          fill="#f2f0ea"
-          opacity={0.7}
-          transform={`scale(${side} 1) translate(40 -150) rotate(${-a * spread})`}
-        />
-      );
-    });
+export const Wings: Art = ({ vw, vh, t, f }) => {
+  const spread = lerp(t, 0.86, 1.02);
   return (
     <>
-      <SkyBg vw={vw} vh={vh} id="wg-sky" stops={[[0, "#3c4046"], [1, "#16181b"]]} />
-      <CloudMass seed="wgc" x={0} y={-vh / 4} w={vw} h={400} fill="#8a9096" opacity={0.6} />
-      <g filter="url(#glow-s)" transform="translate(0 -40)">
-        <g>{feathers(1)}</g>
-        <g>{feathers(-1)}</g>
+      <SkyBg vw={vw} vh={vh} id="wg-sky" stops={[[0, "#20262c"], [0.5, "#3a4148"], [1, "#0c0e10"]]} />
+      <g transform={`translate(${-f * 3} 0)`}>
+        <CloudLayer id="wg-c" x={0} y={-vh * 0.18} w={vw * 1.6} h={vh * 0.8} fill="#1c2126" hi="#c7ccd2" seed={63} density={0.55} />
       </g>
-      <Orb r={180} y={-40} />
-      <Figure pose="stand" s={0.42} y={10} fill="#fff" />
+      <Orb r={lerp(t, 380, 480)} y={-130} opacity={0.75} />
+      <g transform="translate(0 -150)" filter="url(#glow-s)">
+        <g transform={`translate(28 0) rotate(${lerp(t, 4, -2)})`}>
+          <Wing side={1} spread={spread} />
+        </g>
+        <g transform={`translate(-28 0) rotate(${lerp(t, -4, 2)})`}>
+          <Wing side={-1} spread={spread} />
+        </g>
+      </g>
+      <Orb r={150} y={-170} />
+      <Figure variant="backlit" rim="#fffaf0" pose="stand" s={0.5} y={0} />
+      <Mist id="wg" y={300} vw={vw} h={260} f={f} color="#d9dee2" opacity={0.5} />
     </>
   );
 };
