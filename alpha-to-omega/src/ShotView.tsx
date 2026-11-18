@@ -1,10 +1,23 @@
 import React from "react";
-import { AbsoluteFill, Img, random, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Img, getStaticFiles, random, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { ARTS } from "./art";
 import { SharedDefs } from "./art/common";
 import type { Shot } from "./shots";
 
-/** Renders one shot: real asset if `src` is set, otherwise the procedural art. Applies flash/strobe/glitch fx. */
+const IMG = /^(shots|shots-wide)\/(.+)\.(png|jpe?g|webp)$/i;
+
+/**
+ * public/shots/<asset ?? id>.(png|jpg|jpeg|webp) if it exists.
+ * Landscape compositions prefer public/shots-wide/<same name> when present.
+ */
+const findStill = (shot: Shot, wide: boolean) => {
+  const want = shot.asset ?? shot.id;
+  const hits = getStaticFiles().filter((f) => IMG.exec(f.name)?.[2] === want);
+  const pick = (dir: string) => hits.find((f) => f.name.startsWith(`${dir}/`))?.src;
+  return (wide && pick("shots-wide")) || pick("shots");
+};
+
+/** Renders one shot: explicit `src`, else an auto-detected still, else the procedural art. Applies flash/strobe/glitch fx. */
 export const ShotView: React.FC<{ shot: Shot }> = ({ shot }) => {
   const f = useCurrentFrame();
   const { width: W, height: H } = useVideoConfig();
@@ -16,6 +29,7 @@ export const ShotView: React.FC<{ shot: Shot }> = ({ shot }) => {
   const invert = shot.fx?.invert || strobe?.mode === "invert" || Boolean(duo);
   const glitch = shot.fx?.glitch?.includes(f);
   const Art = ARTS[shot.art];
+  const still = shot.src ? staticFile(shot.src) : shot.art === "flash" ? undefined : findStill(shot, W > H);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000", overflow: "hidden" }}>
@@ -25,8 +39,8 @@ export const ShotView: React.FC<{ shot: Shot }> = ({ shot }) => {
         }}
       >
         <AbsoluteFill style={{ scale: String(1 + (shot.zoom ?? 0.05) * t) }}>
-          {shot.src ? (
-            <Img src={staticFile(shot.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          {still ? (
+            <Img src={still} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           ) : (
             <svg width={W} height={H} viewBox={`${-W / 2} ${-H / 2} ${W} ${H}`}>
               <SharedDefs />

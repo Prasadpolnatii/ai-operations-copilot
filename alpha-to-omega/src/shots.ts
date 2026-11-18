@@ -30,8 +30,11 @@ export type Shot = {
   art: ArtName;
   /** art parameters */
   p?: Record<string, string | number | boolean>;
-  /** optional real asset in /public — replaces the procedural art */
+  /** optional real asset in /public — replaces the procedural art.
+   *  Usually not needed: public/shots/<asset ?? id>.(png|jpg|jpeg|webp) is picked up automatically. */
   src?: string;
+  /** reuse another shot's image (1-frame invert/duotone variants share their parent's still) */
+  asset?: string;
   fx?: {
     invert?: boolean;
     /** 1-frame duotone colour flash (inverted + tinted) */
@@ -83,7 +86,7 @@ export const SHOTS: Shot[] = [
   { id: "a1-flash1", act: 1, d: 1, art: "flash", p: { color: "#ffffff" } },
   { id: "a1-beam", act: 1, d: 3, art: "beam" },
   { id: "a1-star", act: 1, d: 3, art: "starBurst" },
-  { id: "a1-star-inv", act: 1, d: 1, art: "starBurst", fx: { invert: true } },
+  { id: "a1-star-inv", act: 1, d: 1, art: "starBurst", asset: "a1-star", fx: { invert: true } },
   { id: "a1-manger", act: 1, d: 3, art: "manger" },
   { id: "a1-olive", act: 1, d: 3, art: "bloom", p: { variant: "olive" } },
   { id: "a1-crimson", act: 1, d: 2, art: "bloom", p: { variant: "crimson" } },
@@ -91,9 +94,9 @@ export const SHOTS: Shot[] = [
   { id: "a1-flash2", act: 1, d: 1, art: "flash", p: { color: "#f6c56b" } },
   { id: "a1-sunrise", act: 1, d: 3, art: "sunrise" },
   { id: "a1-walk1", act: 1, d: 3, art: "figure", p: { pose: "walk", x: -220, s: 0.55 } },
-  { id: "a1-walk1-inv", act: 1, d: 1, art: "figure", p: { pose: "walk", x: -120, s: 0.6 }, fx: { invert: true } },
+  { id: "a1-walk1-inv", act: 1, d: 1, art: "figure", asset: "a1-walk1", p: { pose: "walk", x: -120, s: 0.6 }, fx: { invert: true } },
   { id: "a1-walk2", act: 1, d: 3, art: "figure", p: { pose: "walk", x: 0, s: 0.7 } },
-  { id: "a1-walk2-duo", act: 1, d: 1, art: "figure", p: { pose: "walk", x: 0, s: 0.75 }, fx: { duo: "#e0782a" } },
+  { id: "a1-walk2-duo", act: 1, d: 1, art: "figure", asset: "a1-walk2", p: { pose: "walk", x: 0, s: 0.75 }, fx: { duo: "#e0782a" } },
   { id: "a1-stand", act: 1, d: 3, art: "figure", p: { pose: "stand", x: 0, s: 0.9 } },
   { id: "a1-flash3", act: 1, d: 1, art: "flash", p: { color: "#ffffff" } },
   { id: "a1-arms", act: 1, d: 2, art: "figure", p: { pose: "raised", x: 0, s: 0.95 } },

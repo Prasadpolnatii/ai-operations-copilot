@@ -28,13 +28,15 @@ lifted blacks, gate weave, brightness flicker.
 
 ## Swap in real footage / AI stills
 
-Everything is data in `src/shots.ts`. To replace a placeholder:
+**Drop-in, no code:** save an image as `public/shots/<shot-id>.png` (or `.jpg` / `.webp`), e.g.
+`public/shots/a7-eye01.png`, and it replaces that shot's procedural art. Grade, grain, strobes, glitch
+blocks and the Act 2 cross still apply on top. One-frame invert/duotone variants reuse their parent's image.
 
-1. Drop the file in `public/shots/`, e.g. `public/shots/a2-baptism.jpg`.
-2. Add `src` to that shot: `{ id: "a2-baptism", ..., src: "shots/a2-baptism.jpg" }`.
-3. **Keep the subject dead-center.** The cross (Act 2), icons (Act 4) and pupil (Act 7) all hit the exact middle of the frame.
+- Landscape versions for the 16:9 render can go in `public/shots-wide/` with the same name.
+- To point a shot at any other file, set `src` in `src/shots.ts`. Re-time a shot with `d` (frames).
+- **Keep the subject dead-centre:** the cross (Act 2), icons (Act 4) and pupil (Act 7) all hit the exact middle of the frame.
 
-Re-time a shot by changing `d` (frames). Flash, strobe and glitch effects stay attached through `fx`.
+**[AI_PROMPTS.md](AI_PROMPTS.md)** has a ready-to-paste ChatGPT prompt for every shot (77 total, tiered by impact).
 
 ## Sound
 
