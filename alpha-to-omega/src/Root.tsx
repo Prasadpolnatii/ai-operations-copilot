@@ -3,7 +3,7 @@ import { Composition, Folder } from "remotion";
 import { AlphaToOmega, AlphaToOmegaProps } from "./AlphaToOmega";
 import { ACTS, TOTAL_FRAMES, actRange } from "./shots";
 
-const base: AlphaToOmegaProps = { act: null, music: null };
+const base: AlphaToOmegaProps = { act: null, music: "audio/score.wav" };
 
 export const RemotionRoot: React.FC = () => (
   <>

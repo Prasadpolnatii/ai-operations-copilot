@@ -28,7 +28,8 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "score": "node --no-warnings scripts/make-score.mjs"
   },
   "allowScripts": {
     "esbuild": false

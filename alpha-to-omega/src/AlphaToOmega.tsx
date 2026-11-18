@@ -13,7 +13,7 @@ loadFont({ family: "EB Garamond", url: staticFile("fonts/EBGaramond-greek.woff2"
 export type AlphaToOmegaProps = {
   /** render a single act (1–8) as its own timeline; null = full film */
   act: number | null;
-  /** file in /public, e.g. "music.mp3". Line the drop up with F148 (4.93 s). */
+  /** file in /public. Default: the generated score (`npm run score`). Drop lands on F148 (4.93 s). */
   music: string | null;
 };
 
@@ -38,7 +38,14 @@ export const AlphaToOmega: React.FC<AlphaToOmegaProps> = ({ act, music }) => {
         ) : null}
       </GateWeave>
       <VhsLayer />
-      {music && !act ? <Audio src={staticFile(music)} /> : null}
+      {music ? (
+        <Audio
+          src={staticFile(music)}
+          // single-act previews play their own slice of the score
+          trimBefore={offset || undefined}
+          trimAfter={act ? offset + actRange(act).durationInFrames : undefined}
+        />
+      ) : null}
     </AbsoluteFill>
   );
 };

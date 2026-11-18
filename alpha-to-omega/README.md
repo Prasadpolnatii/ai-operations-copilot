@@ -36,15 +36,33 @@ Everything is data in `src/shots.ts`. To replace a placeholder:
 
 Re-time a shot by changing `d` (frames). Flash, strobe and glitch effects stay attached through `fx`.
 
-## Music
+## Sound
 
-Put a track at `public/music.mp3` and set `music: "music.mp3"` in `defaultProps` (`src/Root.tsx`).
-Line the biggest hit up with **F148 (4.93 s)**, where Act 5 drops. Master to around −14 LUFS / −1 dBTP.
+`public/audio/score.wav` is an **original score + sound design generated in code** by `scripts/make-score.mjs`
+(royalty-free, no samples). Every sound is placed from `src/shots.ts`, so after re-timing shots run
+`npm run score` and the audio follows. ffmpeg is needed for the loudness pass.
+
+| Where | Sound |
+|---|---|
+| F000 | sub impact + high bell ("Let there be light"), D-minor choir pad, ticks + snaps on every flash |
+| Act 2 | bell as the cross draws on; one harp note per 3-frame cut (arpeggio), hats, kick every 4 cuts |
+| Act 3 | wind, rain, B♭ choir; orchestral stab on each strobe (F078 / F082 / F086) |
+| Act 4 | rising pitched tick per icon, pulse tightening, noise riser → **2-frame near-silence (F146–147)** |
+| **F148 drop** | sub boom + thunder + full choir (+40 dB jump out of the gap); thunder on each lightning flash; death-toll bell on the three crosses |
+| Act 6 | heartbeat pulse, glitch bursts on glitch frames, whoosh per cut, splash, wing flaps, stone grind → impact on the sunburst |
+| Act 7 | tick per eye cut, heartbeat speeding up, A-major tension chord, riser |
+| F307 → end | resolves to **D major** choir, doves flutter, wing whoosh, double bell chime on "HE IS RISEN" |
+
+Master: Freeverb reverb send, soft clip, two-pass EBU R128 to **−14 LUFS / −1 dBTP**.
+
+To use your own track instead, put it in `public/` and set `music` in `defaultProps` (`src/Root.tsx`);
+line its biggest hit up with **F148 (4.93 s)**. Set `music: null` for a silent render.
 
 ## Commands
 
 ```bash
 npm i
+npm run score                                         # regenerate the audio (optional)
 npx remotion studio                                   # preview + scrub
 npx remotion render AlphaToOmega out/AlphaToOmega-9x16.mp4 --crf=16
 npx remotion render AlphaToOmega-Wide out/AlphaToOmega-16x9.mp4 --crf=16
