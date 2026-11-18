@@ -1,0 +1,50 @@
+import React from "react";
+import type { ArtName } from "../shots";
+import type { ArtProps } from "./common";
+import * as S from "./scenes";
+import { Icon } from "./icons";
+import { Eye } from "./eye";
+
+export const ARTS: Record<ArtName, React.FC<ArtProps>> = {
+  sliver: S.Sliver,
+  flash: S.Flash,
+  beam: S.Beam,
+  starBurst: S.StarBurst,
+  manger: S.Manger,
+  bloom: S.Bloom,
+  sunrise: S.Sunrise,
+  figure: S.FigureScene,
+  planks: S.Planks,
+  crib: S.Crib,
+  ripples: S.Ripples,
+  mast: S.Mast,
+  loaves: S.Loaves,
+  arch: S.Arch,
+  thorns: S.Thorns,
+  nails: S.Nails,
+  golgotha: S.Golgotha,
+  tomb: S.Tomb,
+  roseWindow: S.RoseWindow,
+  waterWalk: S.WaterWalk,
+  icon: Icon,
+  lightning: S.Lightning,
+  threeCrosses: S.ThreeCrosses,
+  armsGold: S.ArmsGold,
+  hands: S.Hands,
+  stormPart: S.StormPart,
+  vortex: S.Vortex,
+  sinking: S.Sinking,
+  lamb: S.Lamb,
+  warp: S.Warp,
+  reachHand: S.ReachHand,
+  doveDescend: S.DoveDescend,
+  tombInterior: S.TombInterior,
+  stoneRoll: S.StoneRoll,
+  sunburst: S.Sunburst,
+  eye: Eye,
+  eruption: S.Eruption,
+  clouds: S.Clouds,
+  doves: S.Doves,
+  wings: S.Wings,
+  title: S.Title,
+};
