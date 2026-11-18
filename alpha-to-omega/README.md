@@ -26,6 +26,40 @@ and an 18-cut pupil-locked climax.
 Finish layer (`overlays.tsx`): RGB split, film grain, scanlines, vignette, teal/orange grade,
 lifted blacks, gate weave, brightness flicker.
 
+## Direction 1 — "Above Every Name" (the unbroken descent)
+
+Composition **`AboveEveryName`** · 1080×1920 · 450 frames · 15 s · **zero cuts**. One camera
+(`src/descent/camera.ts`) glides down through six stacked parallax worlds, then shoots back up
+into dawn. Philippians 2:6–11 (KJV), one phrase per world.
+
+| Frames | Camera | World | Sound |
+|---|---|---|---|
+| 0–40 | drifting down | **Heaven**: light shafts, lit clouds | wind, airy A-major choir, high bell |
+| ~69 | lingers | **Bethlehem**: star, sleeping town, glowing stable, fireflies | crickets, star chime, quiet D-minor pad |
+| ~126 | lingers | **Galilee**: moonlit sea, boat, rim-lit figure on the water | three ocean swells |
+| ~182 | lingers | **Gethsemane**: olive grove, city wall, kneeling figure in prayer | heartbeat begins (66 bpm), low wind |
+| ~239 | lingers | **Calvary**: crimson storm, eclipse, three crosses, rising embers | heartbeat, thunder, ember crackle |
+| 270–320 | settles | **Tomb**: carved chamber, sealed stone, light seeping round it | heartbeat slowing to 46 bpm |
+| 330–352 | shaking | stone grinds, frame darkens | stone rumble |
+| **352–364** | still | **total darkness** | **0.4 s of true digital silence** |
+| 364 | — | light splits the stone, flash | sub + D-major choir swell |
+| 368–408 | rushing up (motion blur) | every world in reverse | upward rush |
+| 408–450 | settles | **Dawn**: gold sun, "ABOVE EVERY NAME" | dawn chimes, choir holds |
+
+How it works:
+- **Parallax:** every layer has a depth `z`. It moves `z ×` the camera, so far layers drift and
+  foreground layers rush. Far layers and the foreground get depth-of-field blur, and soft masks
+  dissolve each world into the next.
+- **Linger warp:** the camera never stops, but slows to 35% speed at each world's centre so it reads.
+- **Motion blur** is driven by camera speed, so it's only heavy on the ascent.
+- **The sound follows the camera:** `npm run score:descent` reads `camera.ts`. Change the timing
+  or the beats in `T` and re-run, and the sound moves with them.
+
+```bash
+npm run score:descent
+npx remotion render AboveEveryName out/AboveEveryName-9x16.mp4 --crf=16
+```
+
 ## Swap in real footage / AI stills
 
 **Drop-in, no code:** save an image as `public/shots/<shot-id>.png` (or `.jpg` / `.webp`), e.g.

@@ -1,14 +1,10 @@
 import React from "react";
 import { Audio } from "@remotion/media";
-import { loadFont } from "@remotion/fonts";
 import { AbsoluteFill, Sequence, staticFile } from "remotion";
+import "./fonts";
 import { CrossOverlay, GateWeave, RgbSplitDefs, VhsLayer } from "./overlays";
 import { ShotView } from "./ShotView";
 import { SHOTS, SHOT_STARTS, actRange } from "./shots";
-
-// Fonts ship in /public so renders work offline (both are SIL OFL).
-loadFont({ family: "Cinzel", url: staticFile("fonts/Cinzel-700.woff2"), weight: "700" });
-loadFont({ family: "EB Garamond", url: staticFile("fonts/EBGaramond-greek.woff2"), weight: "400" });
 
 export type AlphaToOmegaProps = {
   /** render a single act (1–8) as its own timeline; null = full film */

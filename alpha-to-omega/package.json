@@ -29,7 +29,8 @@
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
-    "score": "node --no-warnings scripts/make-score.mjs"
+    "score": "node --no-warnings scripts/make-score.mjs",
+    "score:descent": "node --no-warnings scripts/make-descent-score.mjs"
   },
   "allowScripts": {
     "esbuild": false

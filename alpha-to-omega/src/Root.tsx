@@ -1,6 +1,8 @@
 import React from "react";
 import { Composition, Folder } from "remotion";
 import { AlphaToOmega, AlphaToOmegaProps } from "./AlphaToOmega";
+import { AboveEveryName } from "./descent/AboveEveryName";
+import { TOTAL as DESCENT_FRAMES } from "./descent/camera";
 import { ACTS, TOTAL_FRAMES, actRange } from "./shots";
 
 const base: AlphaToOmegaProps = { act: null, music: "audio/score.wav" };
@@ -26,6 +28,16 @@ export const RemotionRoot: React.FC = () => (
       width={1920}
       height={1080}
       defaultProps={base}
+    />
+    {/* Direction 1 — "Above Every Name": one unbroken vertical descent, no cuts */}
+    <Composition
+      id="AboveEveryName"
+      component={AboveEveryName}
+      durationInFrames={DESCENT_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+      defaultProps={{ music: "audio/descent.wav" as string | null }}
     />
     <Folder name="Acts">
       {ACTS.map(({ act }) => (
