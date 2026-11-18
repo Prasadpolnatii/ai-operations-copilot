@@ -32,30 +32,39 @@ export const PALETTE: Record<WorldKey | "dawn", [string, string]> = {
 };
 
 /** Scripture (Philippians 2:6–9, KJV — public domain), one phrase per world. */
-export const CAPTIONS: Record<WorldKey, string> = {
-  heaven: "Who, being in the form of God,",
-  bethlehem: "was made in the likeness of men",
-  galilee: "and took upon him the form of a servant",
-  gethsemane: "he humbled himself",
-  calvary: "obedient unto death, even the death of the cross",
-  tomb: "",
+export const CAPTIONS: Record<WorldKey, string[]> = {
+  heaven: ["Who, being", "in the form of God,"],
+  bethlehem: ["was made in the", "likeness of men"],
+  galilee: ["and took upon him", "the form of a servant"],
+  gethsemane: ["he humbled himself"],
+  calvary: ["obedient unto death,", "even the death of the cross"],
+  tomb: [],
 };
 
-const caption = (text: string, color: string, y = 560): Layer => ({
+/**
+ * Mid-video scripture. Centre of the block sits at y≈+320 (≈68% of a 9:16 frame) — inside the
+ * 62–74% band, clear of the Reels/Shorts caption bar and the right-hand action rail.
+ */
+const CAPTION_Y = 320;
+const CAPTION_SIZE = 78;
+const caption = (lines: string[], color: string): Layer => ({
   key: "caption",
   z: 1,
   el: (
     <text
-      y={y}
       textAnchor="middle"
       fontFamily="Cormorant Garamond, serif"
       fontStyle="italic"
       fontWeight={500}
-      fontSize={text.length > 34 ? 54 : 66}
+      fontSize={CAPTION_SIZE}
       fill={color}
       letterSpacing={0.5}
     >
-      {text}
+      {lines.map((l, i) => (
+        <tspan key={l} x={0} y={CAPTION_Y + (i - (lines.length - 1) / 2) * CAPTION_SIZE * 1.12 + CAPTION_SIZE * 0.3}>
+          {l}
+        </tspan>
+      ))}
     </text>
   ),
 });
@@ -91,29 +100,25 @@ const OliveTree: React.FC<{ x: number; y: number; s: number; seed: string; fill:
   </g>
 );
 
-/** Kneeling, praying figure facing right; ground at y = 0. */
-const Kneeling: React.FC<{ x: number; y: number; s: number; rim: string }> = ({ x, y, s, rim }) => {
-  const body =
-    "M 6 -205 C 40 -200 58 -180 66 -160 L 116 -152 L 122 -136 L 70 -126 C 64 -100 58 -80 70 -50 L 110 -10 L 104 0 L -110 0 C -112 -30 -96 -52 -70 -70 C -52 -100 -40 -160 -24 -190 C -14 -202 -4 -206 6 -205 Z";
-  const head = "M 6 -258 Q 12 -286 36 -282 Q 60 -276 58 -248 Q 56 -222 34 -216 Q 14 -214 6 -230 Z";
-  return (
-    <g transform={`translate(${x} ${y}) scale(${s})`}>
-      <g filter="url(#blur-l)" opacity={0.6}>
-        <path d={body} fill={rim} />
-        <path d={head} fill={rim} />
-      </g>
-      <g filter="url(#blur-s)">
-        <path d={body} fill="none" stroke={rim} strokeWidth={8} />
-        <path d={head} fill="none" stroke={rim} strokeWidth={8} />
-      </g>
-      <g filter="url(#paint)" fill="#050806">
-        <path d={body} />
-        <path d={head} />
-      </g>
-      <path d="M 96 0 C 100 -60 118 -118 166 -126 C 226 -132 266 -80 276 0 Z" fill="#070a08" />
+/** Kneeling, praying figure facing right; ground at y = 0. One continuous silhouette. */
+const KNEEL =
+  "M 10 -262 C 14 -292 44 -300 62 -282 C 72 -270 72 -252 66 -240 C 62 -228 54 -222 48 -218 " +
+  "C 52 -206 58 -192 66 -164 L 116 -152 L 122 -136 L 70 -126 C 64 -100 58 -80 70 -50 L 110 -10 L 104 0 L -110 0 " +
+  "C -112 -30 -96 -52 -70 -70 C -52 -100 -40 -160 -24 -190 C -12 -212 0 -228 4 -240 C 6 -250 8 -256 10 -262 Z";
+const KNEEL_FOLDS = ["M -30 -170 C -50 -110 -80 -60 -96 -6", "M 8 -150 C 0 -100 -10 -50 -6 -4", "M 4 -238 C 10 -214 24 -200 40 -192"];
+const Kneeling: React.FC<{ x: number; y: number; s: number; rim: string }> = ({ x, y, s, rim }) => (
+  <g transform={`translate(${x} ${y}) scale(${s})`}>
+    <path d={KNEEL} fill={rim} filter="url(#blur-l)" opacity={0.6} />
+    <path d={KNEEL} fill="none" stroke={rim} strokeWidth={8} filter="url(#blur-s)" />
+    <path d={KNEEL} fill="#050806" filter="url(#paint)" />
+    <g stroke={rim} strokeOpacity={0.16} strokeWidth={3} fill="none" filter="url(#blur-s)">
+      {KNEEL_FOLDS.map((d) => (
+        <path key={d} d={d} />
+      ))}
     </g>
-  );
-};
+    <path d="M 96 0 C 100 -60 118 -118 166 -126 C 226 -132 266 -80 276 0 Z" fill="#070a08" />
+  </g>
+);
 
 const stars = (seed: string, n: number, vw: number) =>
   Array.from({ length: n }, (_, i) => (
@@ -164,7 +169,7 @@ const heaven = ({ f, vw, dawn }: WorldCtx): Layer[] => {
       z: 0.85,
       el: <CloudLayer id={`hv-mid-${dawn > 0.5 ? "d" : "n"}`} x={0} y={480} w={1800} h={760} fill={warm("#a8946f", "#b05f2c")} hi="#fffaf0" seed={9} density={0.64} light={1} azimuth={90} elevation={20} />,
     },
-    ...(dawn > 0 ? [] : [caption(CAPTIONS.heaven, "#3a2a18", 300)]),
+    ...(dawn > 0 ? [] : [caption(CAPTIONS.heaven, "#3a2a18")]),
     transitionMist("heaven", f, vw, "#cfc5b6", 0.9),
   ];
 };
@@ -187,29 +192,39 @@ const bethlehem = ({ f, vw }: WorldCtx): Layer[] => [
   {
     key: "hills-far",
     z: 0.6,
-    el: <path d={`M ${-vw} 900 L ${-vw} 230 Q -300 120 0 210 Q 300 290 ${vw} 160 L ${vw} 900 Z`} fill="#0d1836" mask="url(#fb)" />,
+    el: <path d={`M ${-vw} 900 L ${-vw} 80 Q -300 -30 0 60 Q 300 140 ${vw} 10 L ${vw} 900 Z`} fill="#0d1836" mask="url(#fb)" />,
   },
   {
     key: "town",
     z: 0.85,
     el: (
-      <g>
+      <g transform="translate(0 -170)">
         <path d={`M ${-vw} 900 L ${-vw} 360 Q -200 270 0 330 Q 250 390 ${vw} 300 L ${vw} 900 Z`} fill="#060b1a" mask="url(#fb)" />
         {Array.from({ length: 16 }, (_, i) => {
           const x = -560 + i * 72 + (random(`hx${i}`) - 0.5) * 20;
-          if (Math.abs(x) < 110) return null;
-          const h = 60 + random(`hh${i}`) * 70;
-          const w = 56 + random(`hw${i}`) * 30;
+          if (Math.abs(x) < 120) return null;
+          const h = 50 + random(`hh${i}`) * 60;
+          const w = 58 + random(`hw${i}`) * 30;
           const base = 330 + Math.abs(x) * -0.05 + (x > 0 ? -20 : 0);
+          const top = base - h;
+          const dome = random(`hd${i}`) > 0.35;
+          const r = w / 2;
+          const body = dome
+            ? `M ${x} ${base + 40} L ${x} ${top} A ${r} ${r * 0.8} 0 0 1 ${x + w} ${top} L ${x + w} ${base + 40} Z`
+            : `M ${x} ${base + 40} L ${x} ${top + 8} Q ${x + w / 2} ${top - 10} ${x + w} ${top + 8} L ${x + w} ${base + 40} Z`;
+          const wx = x + w * 0.5 - 6;
+          const wy = top + h * 0.35;
           return (
             <g key={i}>
-              <rect x={x} y={base - h} width={w} height={h + 40} fill="#060b1a" />
-              {random(`hl${i}`) > 0.45 ? <rect x={x + w * 0.35} y={base - h * 0.6} width={10} height={14} fill="#f6c56b" opacity={0.85} /> : null}
+              <path d={body} fill="#060b1a" />
+              {random(`hl${i}`) > 0.4 ? (
+                <path d={`M ${wx} ${wy + 18} L ${wx} ${wy + 6} A 6 6 0 0 1 ${wx + 12} ${wy + 6} L ${wx + 12} ${wy + 18} Z`} fill="#f6c56b" opacity={0.85} filter="url(#glow-s)" />
+              ) : null}
             </g>
           );
         })}
         {/* the stable, centred under the star */}
-        <polygon points="0,170 -120,250 120,250" fill="#060b1a" />
+        <path d="M -124 252 Q -60 168 0 162 Q 60 168 124 252 Z" fill="#060b1a" />
         <rect x={-100} y={248} width={200} height={140} fill="#060b1a" />
         <path d="M -42 388 L -42 300 Q 0 268 42 300 L 42 388 Z" fill="#f6c56b" filter="url(#glow-s)" />
         <Orb r={170} y={330} color="gold" opacity={0.6} />
@@ -348,8 +363,8 @@ const gethsemane = ({ f, vw }: WorldCtx): Layer[] => [
       </g>
     ),
   },
-  { key: "garden-mist", z: 0.95, el: <Mist id="gt-low" y={330} vw={vw} h={260} f={f * 0.15} color="#8fa596" opacity={0.45} /> },
-  { key: "kneeling", z: 1, el: <Kneeling x={-40} y={360} s={0.8} rim="#d9e6d6" /> },
+  { key: "garden-mist", z: 0.95, el: <Mist id="gt-low" y={170} vw={vw} h={260} f={f * 0.15} color="#8fa596" opacity={0.45} /> },
+  { key: "kneeling", z: 1, el: <Kneeling x={-50} y={150} s={0.8} rim="#d9e6d6" /> },
   caption(CAPTIONS.gethsemane, "#e3ebdf"),
   {
     key: "branch",
@@ -462,33 +477,14 @@ const tomb = ({ f, vw, crack }: WorldCtx): Layer[] => [
         <path d="M -300 600 L -300 -120 A 300 300 0 0 1 300 -120 L 300 600 Z" fill="#020303" />
         <Orb r={360 + crack * 600} color="gold" opacity={0.15 + crack * 0.85} />
         {/* faint light seeping around the seal — hope before the break */}
-        <circle cx={crack * 40} cy={40} r={262} fill="none" stroke="#f6c56b" strokeWidth={10} opacity={0.18 + Math.abs(Math.sin(f / 9)) * 0.12 + crack * 0.7} filter="url(#glow-l)" />
-        <g transform={`translate(${crack * 40} 40)`}>
+        <circle cx={0} cy={40} r={262} fill="none" stroke="#f6c56b" strokeWidth={10} opacity={0.18 + Math.abs(Math.sin(f / 9)) * 0.12 + crack * 0.7} filter="url(#glow-l)" />
+        <g transform="translate(0 40)">
           <circle r={250} fill="#1b1f1f" stroke="#070909" strokeWidth={14} />
           <circle r={250} fill="#111" filter="url(#rock-tex)" opacity={0.9} />
         </g>
       </g>
     ),
   },
-  ...(crack > 0
-    ? [
-        {
-          key: "crack",
-          z: 1,
-          el: (
-            <g filter="url(#glow-l)">
-              <path
-                d="M 4 -210 L -10 -120 L 12 -40 L -8 40 L 14 130 L 0 210"
-                stroke="#fff3c8"
-                strokeWidth={4 + crack * 26}
-                fill="none"
-                transform={`scale(1 ${0.3 + crack * 0.7}) translate(0 40)`}
-              />
-            </g>
-          ),
-        } as Layer,
-      ]
-    : []),
   {
     key: "dust",
     z: 1.2,

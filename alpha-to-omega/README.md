@@ -35,16 +35,18 @@ into dawn. Philippians 2:6–11 (KJV), one phrase per world.
 | Frames | Camera | World | Sound |
 |---|---|---|---|
 | 0–40 | drifting down | **Heaven**: light shafts, lit clouds | wind, airy A-major choir, high bell |
-| ~69 | lingers | **Bethlehem**: star, sleeping town, glowing stable, fireflies | crickets, star chime, quiet D-minor pad |
-| ~126 | lingers | **Galilee**: moonlit sea, boat, rim-lit figure on the water | three ocean swells |
-| ~182 | lingers | **Gethsemane**: olive grove, city wall, kneeling figure in prayer | heartbeat begins (66 bpm), low wind |
-| ~239 | lingers | **Calvary**: crimson storm, eclipse, three crosses, rising embers | heartbeat, thunder, ember crackle |
-| 270–320 | settles | **Tomb**: carved chamber, sealed stone, light seeping round it | heartbeat slowing to 46 bpm |
-| 330–352 | shaking | stone grinds, frame darkens | stone rumble |
-| **352–364** | still | **total darkness** | **0.4 s of true digital silence** |
-| 364 | — | light splits the stone, flash | sub + D-major choir swell |
-| 368–408 | rushing up (motion blur) | every world in reverse | upward rush |
-| 408–450 | settles | **Dawn**: gold sun, "ABOVE EVERY NAME" | dawn chimes, choir holds |
+| ~63 | lingers | **Bethlehem**: star, domed town, glowing stable, fireflies | crickets, star chime, quiet D-minor pad |
+| ~115 | lingers | **Galilee**: moonlit sea, boat, rim-lit figure on the water | three ocean swells |
+| ~166 | lingers | **Gethsemane**: olive grove, city wall, kneeling figure in prayer | heartbeat begins (66 bpm), low wind |
+| ~218 | lingers | **Calvary**: crimson storm, eclipse, three crosses, rising embers | heartbeat, thunder, ember crackle |
+| 250–290 | settles | **Tomb**: sealed stone, light seeping round it (≈1.8 s on screen) | heartbeat slowing |
+| 284–300 | shaking | stone grinds, frame darkens | stone rumble |
+| **300–312** | still | **total darkness** | **0.4 s of true digital silence** |
+| 312 | — | 4 branching fractures race across the stone, then bloom | sub + D-major choir swell |
+| 316–356 | rushing up (motion blur) | every world in reverse | upward rush |
+| 356–450 | settles | **Dawn**: gold sun, "ABOVE EVERY NAME" (title holds ≈2.8 s) | dawn chimes, choir holds |
+
+Mid-video scripture sits at about 68% of the frame height (inside the 62–74% band clear of the Reels/Shorts UI), set at 78 units in two-line blocks.
 
 How it works:
 - **Parallax:** every layer has a depth `z`. It moves `z ×` the camera, so far layers drift and

@@ -45,6 +45,77 @@ const Particles: React.FC<{ cy: number; vw: number; vh: number; color: string; z
   );
 };
 
+/** 4 jagged fissures racing out from the stone's centre, each with side branches, glowing into bloom. */
+const FISSURES = [-62, 28, 118, 208].map((deg, k) => {
+  const pts: [number, number][] = [[0, 0]];
+  let a = (deg * Math.PI) / 180;
+  let x = 0;
+  let y = 0;
+  for (let i = 1; i <= 9; i++) {
+    a += (random(`fa${k}${i}`) - 0.5) * 0.9;
+    const step = 22 + random(`fs${k}${i}`) * 14;
+    x += Math.cos(a) * step;
+    y += Math.sin(a) * step;
+    pts.push([x, y]);
+  }
+  const branches = [3, 6].map((at, b) => {
+    const anchor = at / 9; // fraction of the main fissure where this branch splits off
+    const [bx, by] = pts[at];
+    let ba = (deg * Math.PI) / 180 + (b ? 0.9 : -0.9);
+    const bp: [number, number][] = [[bx, by]];
+    let cx = bx;
+    let cy = by;
+    for (let i = 0; i < 4; i++) {
+      ba += (random(`fb${k}${b}${i}`) - 0.5) * 0.8;
+      cx += Math.cos(ba) * 18;
+      cy += Math.sin(ba) * 18;
+      bp.push([cx, cy]);
+    }
+    return { pts: bp, anchor };
+  });
+  return { main: pts, branches };
+});
+const toD = (p: [number, number][]) => p.map(([x, y], i) => `${i ? "L" : "M"} ${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+/** The first `t` (0..1) of a polyline by length — exact geometry, no stroke-dash tricks. */
+const partial = (p: [number, number][], t: number): [number, number][] => {
+  if (t >= 1) return p;
+  const seg = p.slice(1).map(([x, y], i) => Math.hypot(x - p[i][0], y - p[i][1]));
+  let left = seg.reduce((a, b) => a + b, 0) * Math.max(0, t);
+  const out: [number, number][] = [p[0]];
+  for (let i = 0; i < seg.length; i++) {
+    if (left >= seg[i]) {
+      out.push(p[i + 1]);
+      left -= seg[i];
+      continue;
+    }
+    const k = left / seg[i];
+    out.push([p[i][0] + (p[i + 1][0] - p[i][0]) * k, p[i][1] + (p[i + 1][1] - p[i][1]) * k]);
+    break;
+  }
+  return out;
+};
+
+const Fractures: React.FC<{ progress: number }> = ({ progress }) => (
+  <g>
+    <circle r={40 + progress * 200} fill="url(#rg-gold)" opacity={0.25 + progress * 0.6} />
+    {FISSURES.map(({ main, branches }, k) => (
+      <g key={k}>
+        {/* light leaking along the fissure */}
+        <path d={toD(partial(main, progress))} stroke="#ffcf7a" strokeWidth={14} strokeLinecap="round" opacity={0.55} fill="none" filter="url(#blur-s)" />
+        {/* the hairline itself */}
+        <path d={toD(partial(main, progress))} stroke="#fffaf0" strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        {branches.map((b, j) => {
+          // a branch only grows once the main crack has passed its split point
+          const bp = Math.max(0, Math.min(1, ((progress - b.anchor) / (1 - b.anchor)) * 1.4));
+          return bp > 0 ? <path key={j} d={toD(partial(b.pts, bp))} stroke="#fff3d6" strokeWidth={2} strokeLinecap="round" fill="none" /> : null;
+        })}
+      </g>
+    ))}
+    <circle r={34 + progress * 40} fill="url(#rg-white)" />
+    <circle r={4 + progress * 6} fill="#fff" />
+  </g>
+);
+
 export const AboveEveryName: React.FC<AboveEveryNameProps> = ({ music }) => {
   const f = useCurrentFrame();
   const { width: W, height: H } = useVideoConfig();
@@ -54,7 +125,7 @@ export const AboveEveryName: React.FC<AboveEveryNameProps> = ({ music }) => {
 
   const u = warp(worldU(f));
   const dawn = interpolate(f, [T.ascentStart + 18, T.ascentEnd], [0, 1], clamp);
-  const crack = interpolate(f, [T.crack, T.crack + 8], [0, 1], clamp);
+  const crack = interpolate(f, [T.crack - 1, T.crack + 5], [0, 1], clamp);
 
   // camera (+ shake while the stone grinds)
   const shakeAmp = f >= T.rumbleStart && f < T.silenceStart ? interpolate(f, [T.rumbleStart, T.silenceStart], [2, 16]) : 0;
@@ -84,8 +155,10 @@ export const AboveEveryName: React.FC<AboveEveryNameProps> = ({ music }) => {
   });
   layers.sort((p, q) => p.z - q.z);
 
-  const darkness = interpolate(f, [290, 340, T.silenceStart, T.crack, T.crack + 3], [0, 0.45, 0.97, 0.97, 0], clamp);
-  const flash = interpolate(f, [T.crack, T.crack + 4, T.crack + 16], [0, 0.9, 0], clamp);
+  // darkness falls through the rumble; the fractures appear in the dark, then bloom
+  const darkness = interpolate(f, [T.rumbleStart - 22, T.rumbleStart + 6, T.silenceStart, T.crack, T.crack + 4], [0, 0.45, 0.97, 0.97, 0], clamp);
+  const flash = interpolate(f, [T.crack + 3, T.crack + 7, T.crack + 18], [0, 0.75, 0], clamp);
+  const fracture = interpolate(f, [T.crack - 1, T.crack + 4], [0, 1], clamp);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
@@ -164,6 +237,14 @@ export const AboveEveryName: React.FC<AboveEveryNameProps> = ({ music }) => {
 
       {/* tomb darkness → 0.4 s of black silence → light breaks */}
       <AbsoluteFill style={{ backgroundColor: "#000", opacity: darkness }} />
+      {fracture > 0 && f < T.ascentStart + 4 ? (
+        <svg width={W} height={H} viewBox={`${-W / 2} ${-H / 2} ${W} ${H}`} style={{ position: "absolute", inset: 0 }}>
+          <g transform={`scale(${S}) translate(0 ${(5 * D - cy) * 0.85 + 40})`}>
+            <SharedDefs />
+            <Fractures progress={fracture} />
+          </g>
+        </svg>
+      ) : null}
       <AbsoluteFill style={{ backgroundColor: "#fff3d6", opacity: flash, mixBlendMode: "screen" }} />
 
       {/* dawn: scripture + title */}

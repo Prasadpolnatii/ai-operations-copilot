@@ -18,13 +18,13 @@ export type WorldKey = (typeof WORLDS)[number];
 
 /** Story beats (frames). */
 export const T = {
-  descentEnd: 320, // settle in the tomb
-  rumbleStart: 330, // stone grinds, camera shakes
-  silenceStart: 352, // 0.4 s of total silence + darkness
-  crack: 364, // light splits the stone, choir hits
-  ascentStart: 368, // shoot straight up
-  ascentEnd: 408, // arrive at dawn
-  titleIn: 418,
+  descentEnd: 290, // settle in the tomb (tomb on screen ≈ 1.8 s before the crack)
+  rumbleStart: 284, // stone grinds, camera shakes (overlaps the settle)
+  silenceStart: 300, // 0.4 s of total silence + darkness
+  crack: 312, // light fractures the stone, choir hits
+  ascentStart: 316, // shoot straight up
+  ascentEnd: 356, // arrive at dawn
+  titleIn: 366, // title holds ≈ 2.8 s
 } as const;
 
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
@@ -34,8 +34,8 @@ const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2
 
 /** Camera position in worlds (before the "linger" warp). */
 export const worldU = (f: number): number => {
-  if (f <= 270) return lerp(-0.2, 4.55, f / 270); // steady glide down
-  if (f <= T.descentEnd) return 4.55 + 0.45 * easeOutQuad((f - 270) / 50); // settle into the tomb (velocity-matched)
+  if (f <= 250) return lerp(-0.2, 4.62, f / 250); // steady glide down
+  if (f <= T.descentEnd) return 4.62 + 0.38 * easeOutQuad((f - 250) / (T.descentEnd - 250)); // settle into the tomb (velocity-matched)
   if (f < T.ascentStart) return 5 + 0.004 * ((f - T.descentEnd) / (T.ascentStart - T.descentEnd)); // held breath
   if (f <= T.ascentEnd) return lerp(5.004, -0.12, easeInOutCubic((f - T.ascentStart) / (T.ascentEnd - T.ascentStart))); // ascent
   return -0.12 + 0.07 * easeOutQuad(clamp01((f - T.ascentEnd) / (TOTAL - T.ascentEnd))); // dawn drift
