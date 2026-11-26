@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Walk to the Cross — Jerusalem, c. 30 AD (Traditional Route)</title>
+<meta name="description" content="A scroll-driven 3D journey along the traditional route from the Antonia Fortress to Golgotha and the empty tomb.">
+<meta name="theme-color" content="#0b0a09">
+<style>
+:root{
+  --ink:#f5ead7; --dim:rgba(245,234,215,.72); --faint:rgba(245,234,215,.3);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,Cambria,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html{background:#0b0a09;scrollbar-color:rgba(245,234,215,.32) transparent}
+html.touring{overflow:hidden;scrollbar-width:none}
+html.touring::-webkit-scrollbar{display:none}
+body{margin:0;color:var(--ink);font-family:var(--serif);background:#0b0a09;-webkit-font-smoothing:antialiased}
+#scroll{height:1300vh}
+#frame{position:fixed;inset:0;overflow:hidden;background:#000;container-type:size}
+html.vertical #frame{inset:auto;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 1px rgba(255,255,255,.05)}
+#c{display:block;width:100%;height:100%}
+.layer{position:absolute;inset:0;pointer-events:none}
+#vig{background:radial-gradient(ellipse 120% 95% at 50% 46%,transparent 52%,rgba(0,0,0,.85) 100%);opacity:.35}
+#shade{background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.18) 30%,transparent 48%);opacity:0}
+#veil{background:#000;opacity:0}
+#label{position:absolute;top:calc(14px + env(safe-area-inset-top));left:16px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);padding:.45em .8em;border:1px solid var(--faint);border-radius:2px;background:rgba(12,10,8,.28);pointer-events:none;z-index:5}
+#title{position:absolute;left:0;right:0;top:13%;text-align:center;padding:0 16px;pointer-events:none;text-shadow:0 2px 24px rgba(0,0,0,.55)}
+#title h1{margin:0;font-weight:400;letter-spacing:.01em;line-height:1.05;font-size:clamp(30px,8vmin,70px);font-size:clamp(30px,8.2cqmin,70px)}
+#title p{margin:.55em 0 0;font-style:italic;color:var(--dim);font-size:clamp(14px,3vmin,22px);font-size:clamp(14px,3.1cqmin,22px)}
+.cap{position:absolute;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));width:min(92%,36em);transform:translateX(-50%);text-align:center;opacity:0;pointer-events:none;text-shadow:0 1px 16px rgba(0,0,0,.7),0 0 2px rgba(0,0,0,.6);will-change:opacity,transform}
+.cap .n{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--dim)}
+.cap h2{margin:.3em 0 .45em;font-weight:400;line-height:1.08;font-size:clamp(24px,6vmin,46px);font-size:clamp(24px,6.2cqmin,46px)}
+.cap blockquote{margin:0 auto;max-width:30em;font-style:italic;line-height:1.5;font-size:clamp(15px,3vmin,21px);font-size:clamp(15px,3.1cqmin,21px)}
+.cap cite{display:block;margin-top:.7em;font-style:normal;font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+#interlude{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-style:italic;letter-spacing:.04em;opacity:0;pointer-events:none;color:#f3ead9;text-shadow:0 0 30px rgba(140,170,230,.35);font-size:clamp(28px,7vmin,62px);font-size:clamp(28px,7.4cqmin,62px)}
+#hint{position:absolute;left:0;right:0;bottom:calc(84px + env(safe-area-inset-bottom));text-align:center;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);pointer-events:none}
+#hint i{display:block;margin:.6em auto 0;width:1px;height:26px;background:linear-gradient(var(--dim),transparent)}
+#rail{position:absolute;right:12px;top:50%;height:min(38%,260px);width:2px;transform:translateY(-50%);background:var(--faint);pointer-events:none;transition:opacity .6s}
+#rail b{position:absolute;left:0;top:0;width:2px;height:100%;background:var(--ink);transform-origin:top;transform:scaleY(0)}
+#rail s{position:absolute;left:-3px;width:8px;height:8px;border-radius:50%;background:#0b0a09;border:1px solid var(--ink)}
+#play{position:absolute;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translateX(-50%);min-height:44px;padding:.65em 1.5em;font:inherit;font-size:15px;letter-spacing:.08em;color:var(--ink);background:rgba(16,13,10,.55);border:1px solid rgba(245,234,215,.45);border-radius:999px;cursor:pointer;transition:opacity .6s,background .3s,border-color .3s;z-index:6}
+#play:hover,#play:focus-visible{background:rgba(40,32,24,.75);border-color:var(--ink);outline:none}
+#play span{display:inline-block;margin-right:.55em;font-size:.8em;transform:translateY(-.05em)}
+html.touring #play,html.touring #rail,html.touring #hint{opacity:0;pointer-events:none}
+html.vertical #rail{display:none}
+#loader{position:absolute;inset:0;display:grid;place-items:center;background:#0b0a09;color:var(--dim);font-style:italic;letter-spacing:.08em;transition:opacity 1.2s;z-index:9;text-align:center;padding:16px}
+#loader.done{opacity:0;pointer-events:none}
+@media (prefers-reduced-motion: reduce){#loader,#play,#rail{transition:none}}
+</style>
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+<div id="frame">
+  <canvas id="c" aria-label="3D scene of first-century Jerusalem along the traditional route to the cross"></canvas>
+  <div id="vig" class="layer"></div>
+  <div id="shade" class="layer"></div>
+  <div id="veil" class="layer"></div>
+  <div id="label">Traditional route</div>
+  <header id="title"><h1>The Walk to the Cross</h1><p>Jerusalem, c. 30 AD (Traditional Route)</p></header>
+  <section class="cap" role="note"><div class="n">Stop I</div><h2>The Temple Mount &amp; Antonia Fortress</h2><blockquote>“Then came Jesus forth, wearing the crown of thorns, and the purple robe. And Pilate saith unto them, Behold the man!”</blockquote><cite>John 19:5 · KJV</cite></section>
+  <section class="cap" role="note"><div class="n">Stop II</div><h2>Via Dolorosa</h2><blockquote>“And there followed him a great company of people, and of women, which also bewailed and lamented him.”</blockquote><cite>Luke 23:27 · KJV</cite></section>
+  <section class="cap" role="note"><div class="n">Stop III</div><h2>Golgotha</h2><blockquote>“And it was about the sixth hour, and there was a darkness over all the earth until the ninth hour.”</blockquote><cite>Luke 23:44 · KJV</cite></section>
+  <div id="interlude">Three days later…</div>
+  <section class="cap" role="note"><div class="n">Stop IV</div><h2>The Empty Tomb</h2><blockquote>“He is not here: for he is risen, as he said. Come, see the place where the Lord lay.”</blockquote><cite>Matthew 28:6 · KJV</cite></section>
+  <div id="hint">Scroll to walk the route<i></i></div>
+  <div id="rail"><b></b><s style="top:0"></s><s style="top:36%"></s><s style="top:54%"></s><s style="top:92%"></s></div>
+  <button id="play" type="button"><span>▶</span>Auto-Play Tour</button>
+  <div id="loader">Preparing Jerusalem…</div>
+</div>
+<div id="scroll" aria-hidden="true"></div>
+<noscript><p style="position:fixed;inset:auto 0 0;padding:16px;text-align:center">This journey needs JavaScript and WebGL.</p></noscript>
+<script type="module">
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+
+/* ───────────────────────── setup & helpers ───────────────────────── */
+const $ = (s) => document.querySelector(s);
+const html = document.documentElement;
+const VERTICAL = new URLSearchParams(location.search).get('mode') === 'vertical';
+if (VERTICAL) html.classList.add('vertical');
+const RMQ = matchMedia('(prefers-reduced-motion: reduce)');
+let reduced = RMQ.matches;
+const MOBILE = matchMedia('(pointer: coarse)').matches || Math.min(screen.width, screen.height) < 820;
+
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rand = mulberry32(30);                       // the only randomness in the piece
+const R = (a, b) => a + (b - a) * rand();
+const pick = (arr) => arr[Math.floor(rand() * arr.length)];
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const sstep = (t) => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+const lerp = (a, b, t) => a + (b - a) * t;
+
+function ihash(x, y, z, s) { let h = Math.imul(x | 0, 374761393) ^ Math.imul(y | 0, 668265263) ^ Math.imul(z | 0, 1440662683) ^ Math.imul(s | 0, 1274126177); h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+function vnoise2(x, y, s, p) {
+  const xi = Math.floor(x), yi = Math.floor(y), u = sstep(x - xi), v = sstep(y - yi);
+  const x0 = ((xi % p) + p) % p, y0 = ((yi % p) + p) % p, x1 = (x0 + 1) % p, y1 = (y0 + 1) % p;
+  const a = ihash(x0, y0, 0, s), b = ihash(x1, y0, 0, s), c = ihash(x0, y1, 0, s), d = ihash(x1, y1, 0, s);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function fbm2(x, y, s, p, oct) { let v = 0, a = .5, n = 0, f = 1; for (let i = 0; i < oct; i++) { v += a * vnoise2(x * f, y * f, s + i * 31, p * f); n += a; a *= .5; f *= 2; } return v / n; }
+function vnoise3(x, y, z, s) {
+  const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z), u = sstep(x - xi), v = sstep(y - yi), w = sstep(z - zi);
+  const h = (i, j, k) => ihash(xi + i, yi + j, zi + k, s);
+  const a = lerp(h(0, 0, 0), h(1, 0, 0), u), b = lerp(h(0, 1, 0), h(1, 1, 0), u), c = lerp(h(0, 0, 1), h(1, 0, 1), u), d = lerp(h(0, 1, 1), h(1, 1, 1), u);
+  return lerp(lerp(a, b, v), lerp(c, d, v), w);
+}
+function fbm3(x, y, z, s, oct = 3) { let v = 0, a = .5, n = 0, f = 1; for (let i = 0; i < oct; i++) { v += a * vnoise3(x * f, y * f, z * f, s + i * 13); n += a; a *= .5; f *= 2.03; } return v / n; }
+
+// Fritsch–Carlson monotone cubic: smooth, never overshoots (used for pacing).
+function monotone(xs, ys) {
+  const n = xs.length, d = [], m = new Array(n);
+  for (let i = 0; i < n - 1; i++) d.push((ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]));
+  m[0] = d[0]; m[n - 1] = d[n - 2];
+  for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2;
+  for (let i = 0; i < n - 1; i++) {
+    if (d[i] === 0) { m[i] = 0; m[i + 1] = 0; continue; }
+    const a = m[i] / d[i], b = m[i + 1] / d[i], s = a * a + b * b;
+    if (s > 9) { const t = 3 / Math.sqrt(s); m[i] = t * a * d[i]; m[i + 1] = t * b * d[i]; }
+  }
+  return (x) => {
+    if (x <= xs[0]) return ys[0]; if (x >= xs[n - 1]) return ys[n - 1];
+    let i = 0; while (x > xs[i + 1]) i++;
+    const h = xs[i + 1] - xs[i], t = (x - xs[i]) / h, t2 = t * t, t3 = t2 * t;
+    return (2 * t3 - 3 * t2 + 1) * ys[i] + (t3 - 2 * t2 + t) * h * m[i] + (-2 * t3 + 3 * t2) * ys[i + 1] + (t3 - t2) * h * m[i + 1];
+  };
+}
+
+/* ───────────────────────── renderer ───────────────────────── */
+const frame = $('#frame'), canvas = $('#c');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+} catch (e) {
+  $('#loader').textContent = 'This journey needs WebGL, which is not available in this browser.';
+  throw e;
+}
+let DPR = Math.min(window.devicePixelRatio || 1, 2);
+renderer.setPixelRatio(DPR);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFShadowMap;
+renderer.shadowMap.autoUpdate = false;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+const ANISO = Math.min(MOBILE ? 4 : 8, renderer.capabilities.getMaxAnisotropy());
+const SHADOW = MOBILE ? 1024 : 2048;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0xefc89a, 0.004);
+const camera = new THREE.PerspectiveCamera(50, 1, 0.3, 2400);
+
+const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffffff, 3);
+sun.castShadow = true;
+sun.shadow.mapSize.set(SHADOW, SHADOW);
+sun.shadow.bias = -0.0005;
+sun.shadow.normalBias = 0.08;
+sun.shadow.camera.near = 1; sun.shadow.camera.far = 800;
+scene.add(sun, sun.target);
+
+/* ───────────────────────── procedural textures ───────────────────────── */
+function cv(w, h = w) { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d', { willReadFrequently: true })]; }
+function noisePass(x, w, h, amp, period, oct, seed, grain = .35) {
+  const img = x.getImageData(0, 0, w, h), d = img.data;
+  for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) {
+    const n = (fbm2(i / w * period, j / h * period, seed, period, oct) - .5) * amp + (rand() - .5) * amp * grain;
+    const k = (j * w + i) * 4; d[k] += n; d[k + 1] += n * .96; d[k + 2] += n * .9;
+  }
+  x.putImageData(img, 0, 0);
+}
+const rgb = (r, g, b, a = 1) => `rgba(${r | 0},${g | 0},${b | 0},${a})`;
+function texAshlar() { // Herodian ashlar: drafted margins around a flat boss
+  const S = 512, [c, x] = cv(S), rows = 8, rh = S / rows;
+  x.fillStyle = '#7d6e58'; x.fillRect(0, 0, S, S);
+  for (let r = 0; r < rows; r++) {
+    let px = -R(0, 140); const y = r * rh;
+    while (px < S) {
+      const w = R(96, 220), t = R(-16, 14), b = [204 + t, 186 + t, 152 + t * .9];
+      for (const o of [0, S]) {
+        const bx = px - o; if (bx + w < 0 || bx > S) continue;
+        x.fillStyle = rgb(b[0] * .9, b[1] * .9, b[2] * .9); x.fillRect(bx + 2, y + 2, w - 4, rh - 4);
+        x.fillStyle = rgb(b[0], b[1], b[2]); x.fillRect(bx + 10, y + 10, w - 20, rh - 20);
+        x.fillStyle = 'rgba(255,245,225,.18)'; x.fillRect(bx + 10, y + 10, w - 20, 2);
+        x.fillStyle = 'rgba(40,30,20,.22)'; x.fillRect(bx + 10, y + rh - 12, w - 20, 2);
+      }
+      px += w;
+    }
+  }
+  for (let i = 0; i < 40; i++) { x.fillStyle = `rgba(60,48,34,${R(.03, .09)})`; x.fillRect(R(0, S), 0, R(2, 10), S); }
+  noisePass(x, S, S, 30, 8, 2, 3);
+  return c;
+}
+function texPaving() {
+  const S = 512, [c, x] = cv(S);
+  x.fillStyle = '#4e463c'; x.fillRect(0, 0, S, S);
+  let y = 0; const rows = [];
+  while (y < S) { const h = Math.min(S - y, R(52, 92)); rows.push([y, h]); y += h; }
+  if (rows.length > 1 && rows[rows.length - 1][1] < 40) { const l = rows.pop(); rows[rows.length - 1][1] += l[1]; }
+  for (const [ry, rh] of rows) {
+    let px = -R(0, 120);
+    while (px < S) {
+      const w = R(70, 170), t = R(-20, 18);
+      for (const o of [0, S]) { x.fillStyle = rgb(176 + t, 164 + t, 142 + t); x.fillRect(px - o + 3, ry + 3, w - 6, rh - 6); }
+      px += w;
+    }
+  }
+  noisePass(x, S, S, 34, 8, 3, 7);
+  return c;
+}
+function texRock() {
+  const S = 256, [c, x] = cv(S), img = x.createImageData(S, S), d = img.data;
+  for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+    const n = fbm2(i / S * 6, j / S * 6, 11, 6, 4), m = fbm2(i / S * 3, j / S * 3, 19, 3, 2);
+    const v = .62 + .55 * n + (rand() - .5) * .12, k = (j * S + i) * 4;
+    d[k] = 188 * v + m * 20; d[k + 1] = 176 * v + m * 14; d[k + 2] = 156 * v; d[k + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+  x.lineCap = 'round';
+  for (let l = 0; l < 26; l++) {
+    const pts = []; let px = R(0, S), py = R(0, S), a = R(0, 6.28);
+    for (let s = 0; s < 9; s++) { pts.push([px, py]); a += R(-.7, .7); px += Math.cos(a) * R(6, 16); py += Math.sin(a) * R(6, 16); }
+    x.strokeStyle = `rgba(70,58,46,${R(.14, .32)})`; x.lineWidth = R(.6, 1.3);
+    for (const ox of [-S, 0, S]) for (const oy of [-S, 0, S]) { x.beginPath(); pts.forEach(([a1, b1], k) => k ? x.lineTo(a1 + ox, b1 + oy) : x.moveTo(a1 + ox, b1 + oy)); x.stroke(); }
+  }
+  return c;
+}
+function texDirt() {
+  const S = 256, [c, x] = cv(S), img = x.createImageData(S, S), d = img.data;
+  for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+    const n = fbm2(i / S * 8, j / S * 8, 23, 8, 4), g = rand();
+    const v = .7 + .45 * n + (g > .985 ? -.25 : g < .02 ? .18 : 0), k = (j * S + i) * 4;
+    d[k] = 172 * v; d[k + 1] = 156 * v; d[k + 2] = 128 * v; d[k + 3] = 255;
+  }
+  x.putImageData(img, 0, 0); return c;
+}
+function texLime() { // plastered limestone with faint coursing
+  const S = 256, [c, x] = cv(S);
+  x.fillStyle = '#e6dccb'; x.fillRect(0, 0, S, S);
+  for (let r = 0; r < 8; r++) {
+    x.fillStyle = 'rgba(120,100,80,.16)'; x.fillRect(0, r * 32, S, 1.5);
+    let px = R(0, 60); while (px < S) { x.fillRect(px, r * 32, 1.5, 32); px += R(40, 90); }
+  }
+  noisePass(x, S, S, 22, 8, 3, 31, .5);
+  return c;
+}
+function texWood() {
+  const W = 128, H = 256, [c, x] = cv(W, H), img = x.createImageData(W, H), d = img.data;
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const n = fbm2(i / W * 2, j / H * 16, 41, 16, 3), s = Math.sin((i / W) * 40 + n * 9) * .5 + .5;
+    const v = .55 + .3 * s + .25 * n, k = (j * W + i) * 4;
+    d[k] = 150 * v; d[k + 1] = 116 * v; d[k + 2] = 84 * v; d[k + 3] = 255;
+  }
+  x.putImageData(img, 0, 0); return c;
+}
+function texMist() {
+  const S = 256, [c, x] = cv(S), img = x.createImageData(S, S), d = img.data;
+  for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+    const dx = i / S - .5, dy = j / S - .5, r = Math.sqrt(dx * dx + dy * dy) * 2;
+    const n = fbm2(i / S * 4, j / S * 4, 53, 4, 4), a = clamp((n - .32) * 1.9, 0, 1) * (1 - sstep(r * 1.05)), k = (j * S + i) * 4;
+    d[k] = d[k + 1] = d[k + 2] = 255; d[k + 3] = a * 255;
+  }
+  x.putImageData(img, 0, 0); return c;
+}
+function texShaft() {
+  const W = 64, H = 256, [c, x] = cv(W, H), img = x.createImageData(W, H), d = img.data;
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    const u = i / (W - 1), v = j / (H - 1), a = Math.pow(Math.sin(u * Math.PI), 2.2) * sstep(v / .25) * sstep((1 - v) / .5), k = (j * W + i) * 4;
+    d[k] = d[k + 1] = d[k + 2] = 255; d[k + 3] = a * 255;
+  }
+  x.putImageData(img, 0, 0); return c;
+}
+function texDot() {
+  const S = 64, [c, x] = cv(S), g = x.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+  g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.35, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, S, S); return c;
+}
+function tex(c, { srgb = true, rep = true } = {}) {
+  const t = new THREE.CanvasTexture(c);
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  if (rep) t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = ANISO; t.needsUpdate = true; return t;
+}
+const C = { ash: texAshlar(), pave: texPaving(), rock: texRock(), dirt: texDirt(), lime: texLime(), wood: texWood() };
+const T = {
+  ash: tex(C.ash), ashB: tex(C.ash, { srgb: false }), pave: tex(C.pave), paveB: tex(C.pave, { srgb: false }),
+  rock: tex(C.rock), rockB: tex(C.rock, { srgb: false }), dirt: tex(C.dirt), lime: tex(C.lime), wood: tex(C.wood),
+  mist: tex(texMist(), { rep: false }), shaft: tex(texShaft(), { rep: false }), dot: tex(texDot(), { rep: false }),
+};
+
+/* ───────────────────────── materials ───────────────────────── */
+// World-space UV projection so merged / instanced stone never stretches.
+function worldUV(mat, scale) {
+  mat.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader.replace('#include <uv_vertex>', `#include <uv_vertex>
+    {
+      mat4 wM = modelMatrix;
+      #ifdef USE_INSTANCING
+        wM = modelMatrix * instanceMatrix;
+      #endif
+      vec3 wP = (wM * vec4(position, 1.0)).xyz;
+      vec3 wN = normalize(mat3(wM) * normal);
+      vec2 tg = normalize(vec2(-wN.z, wN.x) + vec2(1e-5, 0.0));
+      vec2 wUV = (abs(wN.y) > 0.62 ? wP.xz : vec2(dot(wP.xz, tg), wP.y)) * ${scale.toFixed(5)};
+      #ifdef USE_MAP
+        vMapUv = wUV;
+      #endif
+      #ifdef USE_BUMPMAP
+        vBumpMapUv = wUV;
+      #endif
+    }`);
+  };
+  mat.customProgramCacheKey = () => 'wuv' + scale;
+  return mat;
+}
+const lam = (o, s) => { const m = new THREE.MeshLambertMaterial(o); return s ? worldUV(m, s) : m; };
+const MAT = {
+  stone: lam({ map: T.ash, bumpMap: T.ashB, bumpScale: 2.2 }, 1 / 8),
+  marble: lam({ map: T.lime, color: 0xfff6e8 }, 1 / 7),
+  roof: lam({ map: T.lime, color: 0xb8a48e }, 1 / 5),
+  house: lam({ map: T.lime, vertexColors: true }, 1 / 6),
+  pave: lam({ map: T.pave, bumpMap: T.paveB, bumpScale: 2 }, 1 / 5),
+  rock: lam({ map: T.rock, bumpMap: T.rockB, bumpScale: 2.5, flatShading: true }, 1 / 4.5),
+  ground: lam({ map: T.dirt, vertexColors: true }, 1 / 9),
+  wood: lam({ map: T.wood, color: 0x6f5440 }, 1 / 1.6),
+  trunk: lam({ map: T.wood, color: 0x75644f }, 1 / 1.4),
+  dark: new THREE.MeshLambertMaterial({ color: 0x0c0907 }),
+  gold: new THREE.MeshStandardMaterial({ color: 0xd9a645, metalness: .55, roughness: .38, emissive: 0x6a4410, emissiveIntensity: .4 }),
+  linen: new THREE.MeshLambertMaterial({ color: 0xf2ebdc, emissive: 0x2c261d }),
+  figure: new THREE.MeshLambertMaterial({ color: 0xffffff }),
+  cloth: new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide }),
+  leaf: new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true }),
+};
+
+/* ───────────────────────── geometry batching ───────────────────────── */
+// Static pieces are merged per material: one draw call per material.
+const G = {};
+const _e = new THREE.Euler(), _q = new THREE.Quaternion(), _v = new THREE.Vector3(), _s = new THREE.Vector3();
+function prep(geo, m) {
+  const g = geo.index ? geo.toNonIndexed() : geo.clone();
+  for (const k in g.attributes) if (k !== 'position' && k !== 'normal' && k !== 'uv') g.deleteAttribute(k);
+  if (m) g.applyMatrix4(m); return g;
+}
+function put(key, geo, m) { (G[key] ||= []).push(prep(geo, m)); }
+function mtx(x, y, z, ry = 0, sx = 1, sy = 1, sz = 1, rx = 0, rz = 0) {
+  _e.set(rx, ry, rz, 'YXZ'); _q.setFromEuler(_e);
+  return new THREE.Matrix4().compose(_v.set(x, y, z), _q, _s.set(sx, sy, sz));
+}
+const BOX = new THREE.BoxGeometry(1, 1, 1);
+const boxE = (k, x0, x1, y0, y1, z0, z1) => put(k, BOX, mtx((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2, 0, x1 - x0, y1 - y0, z1 - z0));
+const boxC = (k, x, y0, z, w, h, d, ry = 0, rx = 0, rz = 0) => put(k, BOX, mtx(x, y0 + h / 2, z, ry, w, h, d, rx, rz));
+function build(key, mat, cast = true, recv = true) {
+  if (!G[key]) return null;
+  const m = new THREE.Mesh(mergeGeometries(G[key]), mat);
+  m.castShadow = cast; m.receiveShadow = recv; m.matrixAutoUpdate = false; m.updateMatrix();
+  scene.add(m); G[key] = null; return m;
+}
+function merlons(k, x0, x1, z0, z1, y, step = 1.7, s = .75, h = 1.1) {
+  for (let x = x0 + step / 2; x < x1; x += step) { boxC(k, x, y, z0 + s / 2, s, h, s); boxC(k, x, y, z1 - s / 2, s, h, s); }
+  for (let z = z0 + step * 1.5; z < z1 - step; z += step) { boxC(k, x0 + s / 2, y, z, s, h, s); boxC(k, x1 - s / 2, y, z, s, h, s); }
+}
+function archGeo(w, h, ow, spring, depth) {
+  const s = new THREE.Shape(); s.moveTo(-w / 2, -.6); s.lineTo(w / 2, -.6); s.lineTo(w / 2, h); s.lineTo(-w / 2, h); s.closePath();
+  const r = ow / 2, hole = new THREE.Path();
+  hole.moveTo(-r, -.4); hole.lineTo(r, -.4); hole.lineTo(r, spring); hole.absarc(0, spring, r, 0, Math.PI, false); hole.lineTo(-r, -.4);
+  s.holes.push(hole);
+  const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: false, curveSegments: 10 });
+  g.translate(0, 0, -depth / 2); return g;
+}
+function lump(seed, detail = 6, amp = .22) { // noise-displaced rock
+  const g = new THREE.IcosahedronGeometry(1, detail), p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    _v.fromBufferAttribute(p, i);
+    const n = fbm3(_v.x * 1.6 + seed, _v.y * 1.6, _v.z * 1.6, seed, 3);
+    _v.multiplyScalar(1 + (n - .5) * 2 * amp); p.setXYZ(i, _v.x, _v.y, _v.z);
+  }
+  g.computeVertexNormals(); return g;
+}
+
+/* ───────────────────────── key places ───────────────────────── */
+const TOMB = new THREE.Vector3(-180, 0, -10);            // garden tomb door (base centre)
+const TN = new THREE.Vector3(Math.SQRT1_2, 0, -Math.SQRT1_2); // faces north-east, toward sunrise
+const TX = new THREE.Vector3(-Math.SQRT1_2, 0, -Math.SQRT1_2); // viewer's right when facing the tomb
+const GOLG = new THREE.Vector3(-182, 0, -70);             // the rocky rise outside the wall
+const tombPt = (u, y, n) => new THREE.Vector3().copy(TOMB).addScaledVector(TX, u).addScaledVector(TN, n).setY(y);
+const TOMB_M = new THREE.Matrix4().makeBasis(TX, new THREE.Vector3(0, 1, 0), TN).setPosition(TOMB);
+const tombM = (x, y, z, ry = 0, sx = 1, sy = 1, sz = 1, rx = 0, rz = 0) => new THREE.Matrix4().multiplyMatrices(TOMB_M, mtx(x, y, z, ry, sx, sy, sz, rx, rz));
+const STREET = [[-74, -88], [-86, -87], [-96, -82], [-108, -76], [-122, -72], [-138, -73], [-150, -74], [-160, -74]];
+function streetDist(x, z) {
+  let best = 1e9;
+  for (let i = 0; i < STREET.length - 1; i++) {
+    const [ax, az] = STREET[i], [bx, bz] = STREET[i + 1], dx = bx - ax, dz = bz - az;
+    const t = clamp(((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz), 0, 1);
+    best = Math.min(best, Math.hypot(x - ax - dx * t, z - az - dz * t));
+  }
+  return best;
+}
+const CALM = [[-155, -72], [-160, -58], [-172, -46], [-172, -38], [-171, -31], [-168.6, -24.5], [-170, -20], [-180, -10]];
+const MOURN = [-176, -60];
+
+/* ───────────────────────── terrain & horizon ───────────────────────── */
+function groundH(x, z) {
+  let h = -9 * Math.exp(-(((x - 130) / 15) ** 2));                              // Kidron valley
+  h += 44 * sstep((x - 150) / 120);                                              // Mount of Olives
+  h -= 7 * Math.exp(-(((z - 150) / 22) ** 2)) * sstep((x + 120) / 60) * (1 - sstep((x - 60) / 60));
+  h += 12 * sstep((-250 - x) / 160);                                             // western hills
+  const out = Math.max(sstep((-150 - x) / 25), sstep((x - 104) / 20), sstep((Math.abs(z) - 150) / 30));
+  let dmin = 1e9; for (const [cx, cz] of CALM) dmin = Math.min(dmin, Math.hypot(x - cx, z - cz));
+  h += out * sstep((dmin - 12) / 25) * (fbm3(x * .02, 0, z * .02, 5) - .45) * 5;
+  return h;
+}
+{
+  const g = new THREE.PlaneGeometry(1500, 1500, 150, 150); g.rotateX(-Math.PI / 2); g.translate(-40, 0, 0);
+  const p = g.attributes.position, col = new Float32Array(p.count * 3);
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), z = p.getZ(i), y = groundH(x, z); p.setY(i, y);
+    const n = fbm3(x * .05, 1, z * .05, 9), city = (x > -150 && x < 104 && Math.abs(z) < 150) ? 1 : 0;
+    const garden = Math.exp(-(((x - TOMB.x - 5) ** 2 + (z - TOMB.z + 5) ** 2) / 520));
+    const gr = clamp(clamp((n - .42) * 2.6, 0, 1) * (1 - city) * .6 + garden * .95 + sstep((x - 140) / 40) * .55, 0, 1);
+    const path = Math.exp(-(streetDist(x, z) ** 2) / 6) * (1 - city) * .25;
+    const v = (.8 + n * .4) * (1 - path);
+    col[i * 3] = lerp(.95, .5, gr) * v; col[i * 3 + 1] = lerp(.88, .62, gr) * v; col[i * 3 + 2] = lerp(.78, .34, gr) * v;
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.computeVertexNormals();
+  const m = new THREE.Mesh(g, MAT.ground); m.receiveShadow = true; m.matrixAutoUpdate = false; scene.add(m);
+}
+const hills = [];
+for (const [r0, hMin, hAmp, k, seed] of [[640, 10, 34, .45, 71], [980, 24, 60, .7, 72]]) {
+  const N = 180, pos = [], idx = [];
+  for (let i = 0; i <= N; i++) {
+    const a = i / N * Math.PI * 2, r = r0 + 50 * Math.sin(a * 3 + seed);
+    const east = Math.max(0, Math.cos(a)) * 5;               // the ridge east of the city
+    const h = hMin + east + hAmp * fbm3(Math.cos(a) * 3, seed, Math.sin(a) * 3, seed, 4);
+    const x = -40 + Math.cos(a) * r, z = Math.sin(a) * r; pos.push(x, -40, z, x, h, z);
+    if (i < N) idx.push(i * 2, i * 2 + 1, i * 2 + 2, i * 2 + 1, i * 2 + 3, i * 2 + 2);
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx);
+  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: 0x6f6050, fog: false, toneMapped: false, side: THREE.DoubleSide }));
+  m.userData.k = k; m.matrixAutoUpdate = false; m.renderOrder = -1; scene.add(m); hills.push(m);
+}
+
+/* ───────────────────────── Temple Mount ───────────────────────── */
+const COLS = [];
+const colGeo = mergeGeometries([
+  prep(BOX, mtx(0, .03, 0, 0, 1.25, .06, 1.25)),
+  prep(new THREE.CylinderGeometry(.4, .47, .87, 10), mtx(0, .495, 0)),
+  prep(BOX, mtx(0, .965, 0, 0, 1.2, .07, 1.2)),
+]);
+const column = (x, z, h) => COLS.push(mtx(x, 10, z, 0, 1, h, 1));
+boxE('stone', -30, 100, 0, 10, -75, 75);                       // the great platform
+boxE('stone', -30.4, 100.4, 9.4, 10.1, -75.4, 75.4);           // projecting top course
+// Royal Stoa (south): basilica with raised nave
+boxE('marble', -30, 100, 10, 19, 73.2, 75);
+for (const z of [58, 63, 68]) for (let x = -27; x <= 97.5; x += 4.3) column(x, z, 9);
+boxE('roof', -30, 100, 19, 19.7, 56.4, 63.6); boxE('roof', -30, 100, 19, 19.7, 67.4, 75.2);
+boxE('marble', -30, 100, 19.7, 23.6, 62.5, 63.3); boxE('marble', -30, 100, 19.7, 23.6, 67.7, 68.5);
+boxE('roof', -30.5, 100.5, 23.6, 24.4, 61.8, 69.2);
+// Porticoes: west, north, east (Solomon's Porch)
+boxE('marble', -30, -28.6, 10, 17, -75, 56.4);
+for (let z = -71; z <= 54; z += 5) { column(-24, z, 7); column(-19, z, 7); }
+boxE('roof', -30.2, -16.4, 17, 17.7, -75.2, 56.4);
+boxE('marble', -16.4, 100, 10, 17, -75, -73.6);
+for (let x = -12; x <= 96; x += 5) { column(x, -69, 7); column(x, -64, 7); }
+boxE('roof', -16.4, 100.2, 17, 17.7, -75.2, -61.4);
+boxE('marble', 98.6, 100, 10, 17, -61.4, 56.4);
+for (let z = -58; z <= 54; z += 5) { column(94, z, 7); column(89, z, 7); }
+boxE('roof', 85.4, 100.2, 17, 17.7, -61.4, 56.4);
+// Southern steps and the Huldah gates
+for (let i = 0; i < 8; i++) boxE('stone', 22, 66, 0, 3 - i * .37, 75, 77 + i * 1.4);
+boxE('dark', 30, 34.5, 3, 7.5, 74.9, 75.1); boxE('dark', 50, 56, 3, 7.5, 74.9, 75.1);
+// Monumental stair on an arch at the south-west corner
+put('stone', archGeo(14, 9.5, 9, 3.6, 6), mtx(-37, 0, 60));
+for (let i = 0; i < 12; i++) boxE('stone', -44, -33, 0, 9.4 - i * .78, 63 + i * 1.6, 64.6 + i * 1.6);
+// Inner courts on their raised terrace
+boxE('stone', 6, 90, 10, 12, -25, 25);
+for (let i = 1; i <= 3; i++) boxE('stone', 6 - i * .8, 90 + i * .8, 10, 12 - i * .5, -25 - i * .8, 25 + i * .8);
+boxE('marble', 12, 66, 12, 19, -21, -19.5); boxE('marble', 12, 66, 12, 19, 19.5, 21);
+boxE('marble', 12, 13.5, 12, 19, -21, 21); boxE('marble', 64.5, 66, 12, 19, -21, 21);
+for (const x of [24, 38, 52]) { boxE('marble', x - 2.6, x + 2.6, 12, 22.5, -22.2, -18.6); boxE('marble', x - 2.6, x + 2.6, 12, 22.5, 18.6, 22.2); }
+boxE('marble', 63.6, 67, 12, 24, -4.5, 4.5); boxE('gold', 66.9, 67.15, 12.4, 20, -2.6, 2.6);       // Nicanor gate
+boxE('marble', 66, 88, 12, 18, -17, -15.8); boxE('marble', 66, 88, 12, 18, 15.8, 17); boxE('marble', 86.8, 88, 12, 18, -17, 17);
+for (const [x, z] of [[66, -17], [82, -17], [66, 12], [82, 12]]) boxE('marble', x, x + 6, 12, 19.2, z, z + 5);
+boxE('marble', 86, 89.4, 12, 21.5, -4, 4); boxE('gold', 89.3, 89.5, 12.4, 18.6, -2, 2);           // Beautiful gate
+// The Sanctuary: narrow behind, broad in front, white stone and gold
+boxE('marble', 17, 41, 12, 34, -8.5, 8.5);
+boxE('marble', 41, 46, 12, 38, -13.5, 13.5);
+boxE('gold', 40.7, 46.3, 36.7, 37.4, -13.8, 13.8); boxE('gold', 16.8, 41, 33, 33.6, -8.7, 8.7);
+boxE('dark', 46, 46.15, 12.6, 28.5, -3.4, 3.4);
+boxE('gold', 46, 46.35, 28.8, 30.4, -5.2, 5.2); boxE('gold', 46, 46.3, 12.6, 28.8, -4.2, -3.4); boxE('gold', 46, 46.3, 12.6, 28.8, 3.4, 4.2);
+for (let x = 18; x < 41; x += 1.5) { boxC('gold', x, 34, -8.3, .14, 1.1, .14); boxC('gold', x, 34, 8.3, .14, 1.1, .14); }
+for (let z = -13; z <= 13; z += 1.5) boxC('gold', 43.5, 38, z, .14, 1.1, .14);
+for (let i = 0; i < 4; i++) boxE('marble', 46 + i * .9, 47 + i * .9, 12, 12.9 - i * .22, -9, 9);
+boxE('stone', 50, 58, 12, 15.6, -4, 4);                                                               // altar
+put('stone', BOX, mtx(54, 13.9, 8.4, 0, 3, .6, 9.2, -.38));                                          // its ramp
+
+/* ───────────────────────── Antonia Fortress ───────────────────────── */
+boxE('stone', -50, -14, 0, 10, -102, -76);          // scarp
+boxE('stone', -58, -50, 0, 10, -94, -82);            // landing on the west
+boxE('stone', -48, -16, 10, 24, -100, -78);
+merlons('stone', -48, -16, -100, -78, 24);
+for (const [x0, z0, top] of [[-50, -102, 32], [-21, -102, 32], [-50, -83, 32], [-21, -83, 40]]) {
+  boxE('stone', x0, x0 + 7, 10, top, z0, z0 + 7);
+  merlons('stone', x0, x0 + 7, z0, z0 + 7, top, 1.55, .7, 1);
+  for (let y = 16; y < top - 3; y += 6) { boxE('dark', x0 + 3.2, x0 + 3.8, y, y + 1.8, z0 + 6.95, z0 + 7.05); boxE('dark', x0 - .05, x0 + .05, y, y + 1.8, z0 + 3.2, z0 + 3.8); }
+}
+boxE('dark', -48.15, -47.95, 10, 14.6, -90.6, -85.4);
+for (let i = 0; i < 20; i++) boxE('stone', -58 - (i + 1) * .8, -58 - i * .8, 0, 10 - (i + 1) * .5, -91.6, -84.4);
+boxE('stone', -74.2, -58, 0, 1.2, -92.4, -91.6); boxE('stone', -74.2, -58, 0, 1.2, -84.4, -83.6);
+
+/* ───────────────────────── city wall & gate ───────────────────────── */
+boxE('wall', -152, -148, 0, 9, -170, -78); boxE('wall', -152, -148, 0, 9, -70, 160);
+for (let z = -168; z < 160; z += 1.8) if (z < -79 || z > -69) boxC('wall', -152.4, 9, z, .7, 1.1, .8);
+for (const z of [-140, -110, -40, -10, 20, 50, 80, 110, 140]) { boxE('wall', -155, -145, 0, 12.5, z - 4, z + 4); merlons('wall', -155, -145, z - 4, z + 4, 12.5, 1.6, .7, 1); }
+boxE('wall', -155, -145, 0, 14, -84, -78); boxE('wall', -155, -145, 0, 14, -70, -64);
+merlons('wall', -155, -145, -84, -78, 14, 1.6, .7, 1); merlons('wall', -155, -145, -70, -64, 14, 1.6, .7, 1);
+put('wall', archGeo(8, 12.4, 5.2, 5.4, 10), mtx(-150, 0, -74, Math.PI / 2));
+for (const z of [-82.5, -65.5]) for (const y of [5, 9.5]) boxE('dark', -155.1, -154.9, y, y + 1.6, z, z + .5);
+
+/* ───────────────────────── the city ───────────────────────── */
+const HOUSES = [];          // [x, y0, z, w, h, d, ry]
+const addHouse = (x, y0, z, w, h, d, ry) => HOUSES.push([x, y0, z, w, h, d, ry]);
+const roofRoom = (x, y0, z, w, d, ry) => { if (rand() < .3) addHouse(x + R(-w, w) * .2, y0, z + R(-d, d) * .2, w * R(.35, .55), R(2.2, 3.1), d * R(.35, .55), ry); };
+const SH = [];              // houses that line the Via Dolorosa
+for (let i = 0; i < STREET.length - 2; i++) {
+  const [ax, az] = STREET[i], [bx, bz] = STREET[i + 1], L = Math.hypot(bx - ax, bz - az);
+  const dx = (bx - ax) / L, dz = (bz - az) / L, ry = Math.atan2(-dz, dx);
+  for (const s of [-1, 1]) {
+    let a = R(0, 1.2);
+    while (a < L - 1.4) {
+      const w = Math.min(R(3.8, 6.2), L - a), d = R(5, 7.5), h = R(4.2, 8.4), off = 2.35 + d / 2, al = a + w / 2;
+      const nx = -dz * s, nz = dx * s, cx = ax + dx * al + nx * off, cz = az + dz * al + nz * off;
+      let ok = true;
+      for (const [cu, cn] of [[-w / 2, -d / 2], [w / 2, -d / 2], [-w / 2, d / 2], [w / 2, d / 2]]) {
+        const px = cx + dx * cu + nx * cn, pz = cz + dz * cu + nz * cn;
+        if (streetDist(px, pz) < 2.2 || px < -147.6) ok = false;
+      }
+      if (ok) { addHouse(cx, 0, cz, w - .2, h, d, ry); roofRoom(cx, h, cz, w, d, ry); SH.push({ cx, cz, w, d, h, dx, dz, nx, nz, ry, seg: i }); }
+      a += w;
+    }
+  }
+}
+function gridHouses(x0, x1, z0, z1, skip) {
+  for (let gx = x0; gx < x1; gx += 7) for (let gz = z0; gz < z1; gz += 7) {
+    if (rand() < .1) continue;
+    const x = gx + R(-1, 1), z = gz + R(-1, 1), w = R(4.4, 6.4), d = R(4.4, 6.4), h = R(3.2, 6.8), ry = R(-.12, .12);
+    if (streetDist(x, z) < 9.6 || skip(x, z)) continue;
+    addHouse(x, 0, z, w, h, d, ry); roofRoom(x, h, z, w, d, ry);
+  }
+}
+gridHouses(-146, -34, -166, 150, (x, z) => (x > -62 && z > -106 && z < -72) || (x > -48 && z > 54 && z < 88));
+gridHouses(-34, 96, -166, -84, (x, z) => x < -8 && z > -108);
+gridHouses(-28, 72, 88, 150, (x, z) => x > 18 && x < 68 && z < 92);
+{
+  const g = BOX.clone(); g.translate(0, .5, 0);
+  const p = g.attributes.position, c = new Float32Array(p.count * 3);
+  for (let i = 0; i < p.count; i++) { const v = p.getY(i) > .5 ? 1 : .5; c[i * 3] = c[i * 3 + 1] = c[i * 3 + 2] = v; }
+  g.setAttribute('color', new THREE.BufferAttribute(c, 3));
+  const im = new THREE.InstancedMesh(g, MAT.house, HOUSES.length), col = new THREE.Color();
+  const tones = [[.93, .86, .74], [.96, .93, .86], [.88, .79, .64], [.86, .83, .78], [.92, .82, .7]];
+  HOUSES.forEach(([x, y0, z, w, h, d, ry], i) => {
+    im.setMatrixAt(i, mtx(x, y0, z, ry, w, h, d));
+    const t = pick(tones), k = R(.84, 1.04); im.setColorAt(i, col.setRGB(t[0] * k, t[1] * k, t[2] * k, THREE.SRGBColorSpace));
+  });
+  im.castShadow = im.receiveShadow = true; scene.add(im);
+}
+
+/* ───────────────────────── Via Dolorosa ───────────────────────── */
+for (let i = 0; i < STREET.length - 2; i++) {
+  const [ax, az] = STREET[i], [bx, bz] = STREET[i + 1], L = Math.hypot(bx - ax, bz - az);
+  boxC('pave', (ax + bx) / 2, 0, (az + bz) / 2, L + .9, .1, 4.7, Math.atan2(-(bz - az), bx - ax));
+}
+const ARCHES = [[1, .55, false], [3, .42, true], [4, .62, false]];
+for (const [i, t, room] of ARCHES) {
+  const [ax, az] = STREET[i], [bx, bz] = STREET[i + 1], px = lerp(ax, bx, t), pz = lerp(az, bz, t), th = Math.atan2(bx - ax, bz - az);
+  put('stone', archGeo(8.6, 7.8, 4.5, 4.1, 1.8), mtx(px, 0, pz, th));
+  if (room) { boxC('stone', px, 7.8, pz, 8.6, 3.4, 4.4, th); boxC('dark', px, 8.8, pz, .7, 1, 4.5, th); }
+}
+const STAIRS = [];
+SH.forEach((h, k) => {
+  const fx = h.cx - h.nx * (h.d / 2 + .02), fz = h.cz - h.nz * (h.d / 2 + .02);
+  const du = R(-h.w / 2 + .9, h.w / 2 - .9);
+  boxC('wood', fx + h.dx * du, 0, fz + h.dz * du, 1.05, 2.15, .14, h.ry);
+  if (h.h > 5) for (let wv = 0; wv < 2; wv++) if (rand() < .5) { const u = R(-h.w / 2 + .6, h.w / 2 - .6); boxC('dark', fx + h.dx * u, R(3.3, h.h - 1.4), fz + h.dz * u, .5, .7, .14, h.ry); }
+  if (k % 6 === 3 && h.h < 7.2 && h.w > 4.6) {            // outside stair to the roof
+    const n = 7, u0 = du > 0 ? -h.w / 2 + .5 : h.w / 2 - .5 - n * .62, ox = fx - h.nx * .42, oz = fz - h.nz * .42;
+    for (let s = 0; s < n; s++) { const u = u0 + s * .62 + .31, sx = ox + h.dx * u, sz = oz + h.dz * u; boxC('stone', sx, 0, sz, .62, (s + 1) * h.h / n * .96, .84, h.ry); STAIRS.push([sx, sz]); }
+  }
+});
+const AWN = [];
+SH.forEach((h) => {
+  if (rand() > .34 || h.seg === 0) return;
+  const u = R(-h.w / 2 + 1.3, h.w / 2 - 1.3), y = R(2.6, 3.1), tilt = .42, out = 1.15;
+  const X = new THREE.Vector3(h.dx, 0, h.dz), Z = new THREE.Vector3(-h.nx * Math.cos(tilt), -Math.sin(tilt), -h.nz * Math.cos(tilt));
+  const Y = new THREE.Vector3().crossVectors(Z, X);
+  const px = h.cx - h.nx * (h.d / 2) + h.dx * u - h.nx * out * Math.cos(tilt) * .5, pz = h.cz - h.nz * (h.d / 2) + h.dz * u - h.nz * out * Math.cos(tilt) * .5;
+  AWN.push(new THREE.Matrix4().makeBasis(X, Y, Z).scale(_s.set(R(1.9, 2.6), 1, out)).setPosition(px, y - Math.sin(tilt) * out * .5, pz));
+});
+{
+  const im = new THREE.InstancedMesh(new THREE.BoxGeometry(1, .04, 1), MAT.cloth, AWN.length), col = new THREE.Color();
+  const dyes = [[.58, .26, .2], [.32, .34, .46], [.74, .67, .54], [.55, .45, .3], [.44, .3, .36]];
+  AWN.forEach((m, i) => { im.setMatrixAt(i, m); const t = pick(dyes); im.setColorAt(i, col.setRGB(t[0], t[1], t[2], THREE.SRGBColorSpace)); });
+  im.castShadow = true; im.receiveShadow = true; scene.add(im);
+}
+
+/* ───────────────────────── people, as silhouettes ───────────────────────── */
+const V2 = (r, y) => new THREE.Vector2(r, y);
+const figGeo = mergeGeometries([
+  prep(new THREE.LatheGeometry([V2(0, 0), V2(.27, 0), V2(.25, .32), V2(.21, .9), V2(.2, 1.28), V2(.13, 1.42), V2(0, 1.45)], 7)),
+  prep(new THREE.SphereGeometry(.11, 7, 5), mtx(0, 1.54, 0)),
+  prep(new THREE.LatheGeometry([V2(0, 1.7), V2(.12, 1.66), V2(.16, 1.53), V2(.2, 1.35), V2(.23, 1.18)], 7)),
+]);
+const FIG = [];
+const addFig = (x, y, z, faceX, faceZ, s = R(.9, 1.06), lean = R(.03, .12)) => FIG.push(mtx(x, y, z, Math.atan2(faceX - x, faceZ - z), s, s * R(.95, 1.05), s, lean));
+const nearStair = (x, z) => STAIRS.some(([sx, sz]) => Math.hypot(sx - x, sz - z) < 1.6);
+for (let i = 1; i <= 4; i++) {
+  const [ax, az] = STREET[i], [bx, bz] = STREET[i + 1], L = Math.hypot(bx - ax, bz - az), dx = (bx - ax) / L, dz = (bz - az) / L;
+  const n = i === 2 || i === 3 ? 18 : 9;
+  for (let k = 0; k < n; k++) {
+    const a = R(.8, L - .8), s = rand() < .5 ? -1 : 1, off = R(1.55, 2.0);
+    const x = ax + dx * a - dz * s * off, z = az + dz * a + dx * s * off;
+    if (nearStair(x, z) || FIG.length && FIG.some((m) => Math.hypot(m.elements[12] - x, m.elements[14] - z) < .62)) continue;
+    addFig(x, 0, z, ax + dx * (a - 3), az + dz * (a - 3), rand() < .12 ? R(.62, .72) : undefined);
+  }
+}
+SH.forEach((h, k) => { if (k % 5 === 1 && h.seg > 0 && h.h < 7.6) { const u = R(-h.w / 2 + .6, h.w / 2 - .6), x = h.cx - h.nx * (h.d / 2 - .6) + h.dx * u, z = h.cz - h.nz * (h.d / 2 - .6) + h.dz * u; addFig(x, h.h, z, x - h.nx * 5, z - h.nz * 5); } });
+for (const [x, z] of [[-147, -79.5], [-146.5, -68.8], [-158.5, -79]]) addFig(x, 0, z, -170, -70);
+for (let k = 0; k < 7; k++) addFig(MOURN[0] + R(-1.8, 1.8), 0, MOURN[1] + R(-1.2, 1.2), GOLG.x, GOLG.z, R(.88, 1), R(.08, .18)); // the women, "afar off"
+{
+  const im = new THREE.InstancedMesh(figGeo, MAT.figure, FIG.length), col = new THREE.Color();
+  const robes = [[.32, .26, .2], [.24, .21, .2], [.4, .33, .25], [.33, .23, .22], [.22, .25, .3], [.45, .4, .32]];
+  FIG.forEach((m, i) => { im.setMatrixAt(i, m); const t = pick(robes); im.setColorAt(i, col.setRGB(t[0], t[1], t[2], THREE.SRGBColorSpace)); });
+  im.castShadow = true; im.receiveShadow = true; scene.add(im);
+}
+
+/* ───────────────────────── olive trees & shrubs ───────────────────────── */
+const trunkGeo = (() => {
+  const g = new THREE.CylinderGeometry(.13, .27, 2.5, 6, 4); g.translate(0, 1.25, 0);
+  const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) { const y = p.getY(i); p.setX(i, p.getX(i) + Math.sin(y * 1.4) * .2); p.setZ(i, p.getZ(i) + Math.cos(y * .9) * .12); }
+  g.computeVertexNormals(); return g;
+})();
+const CROWN_PARTS = [[0, 2.9, 0, 1.6, 1, 1.6], [.95, 2.55, .45, 1.05, .78, 1.05], [-.85, 2.62, -.35, 1.15, .8, 1.15], [.15, 3.45, -.5, .95, .7, .95]].map((a) => [...a, R(0, 6)]);
+const crownGeo = (det) => mergeGeometries(CROWN_PARTS.map(([x, y, z, a, b, c, r]) => prep(new THREE.IcosahedronGeometry(1, det), mtx(x, y, z, r, a, b, c))));
+const TREES = [], CROWNS = [], NEAR = [];
+function tree(x, z, s = R(.85, 1.35), near = false) { const y = groundH(x, z) - .1, ry = R(0, 6.28); TREES.push(mtx(x, y, z, ry, s, s * R(.9, 1.15), s)); (near ? NEAR : CROWNS).push(mtx(x, y, z, ry, s, s * R(.9, 1.1), s)); }
+function shrub(x, z, s = R(.28, .5)) { NEAR.push(mtx(x, groundH(x, z) - 2.45 * s, z, R(0, 6.28), s * R(.9, 1.3), s, s * R(.9, 1.3))); }
+for (const [u, n] of [[-9.5, 4], [-12, 10.5], [8.5, 4.5], [12, 10.5], [-15, 15.5], [-15.5, 2.5], [14.5, 1.5], [-4.5, 22], [17, 17]]) { const p = tombPt(u, 0, n); tree(p.x, p.z, R(.95, 1.3), true); }
+const segD = (u, n, a, b, c, d) => { const dx = c - a, dz = d - b, t = clamp(((u - a) * dx + (n - b) * dz) / (dx * dx + dz * dz), 0, 1); return Math.hypot(u - a - dx * t, n - b - dz * t); };
+const clearOf = (x, z, r) => Math.hypot(x - GOLG.x, z - GOLG.z) > 21 && Math.hypot(x - TOMB.x, z - TOMB.z) > 20 && CALM.every(([cx, cz]) => Math.hypot(x - cx, z - cz) > r);
+for (let k = 0; k < 26; k++) { const x = R(-240, -158), z = R(-140, 30); if (clearOf(x, z, 12)) tree(x, z); }
+for (let k = 0; k < 40; k++) { const x = R(-340, -200), z = R(-220, 180); if (clearOf(x, z, 9)) tree(x, z, R(.9, 1.5)); }
+for (let k = 0; k < 120; k++) tree(R(150, 330), R(-240, 240), R(1, 1.6));
+for (let k = 0; k < 16; k++) tree(R(110, 148), R(-150, 150));
+for (let k = 0; k < 18; k++) { const x = R(-140, -40), z = R(-150, 140); if (streetDist(x, z) > 10 && !(x > -62 && z > -106 && z < -72)) tree(x, z, R(.8, 1.1)); }
+for (let k = 0; k < 40; k++) { const u = R(-13, 13), n = R(1.5, 22); if (!(u > -6 && u < 2.5 && n < 12) && segD(u, n, 8.5, 21, -1.8, 8.2) > 3) { const p = tombPt(u, 0, n); shrub(p.x, p.z); } }
+for (let k = 0; k < 22; k++) { const a = R(0, 6.28), r = R(15, 22), x = GOLG.x + Math.cos(a) * r, z = GOLG.z + Math.sin(a) * r; if (Math.hypot(x - MOURN[0], z - MOURN[1]) > 4 && CALM.every(([cx, cz]) => Math.hypot(x - cx, z - cz) > 4)) shrub(x, z, R(.3, .6)); }
+{
+  const tr = new THREE.InstancedMesh(trunkGeo, MAT.trunk, TREES.length); TREES.forEach((m, i) => tr.setMatrixAt(i, m));
+  tr.castShadow = tr.receiveShadow = true; scene.add(tr);
+  const col = new THREE.Color();
+  for (const [list, det] of [[CROWNS, 0], [NEAR, 1]]) {
+    const cr = new THREE.InstancedMesh(crownGeo(det), MAT.leaf, list.length);
+    list.forEach((m, i) => { cr.setMatrixAt(i, m); const k = R(.82, 1.1); cr.setColorAt(i, col.setRGB(.5 * k, .55 * k, .38 * k, THREE.SRGBColorSpace)); });
+    cr.castShadow = cr.receiveShadow = true; scene.add(cr);
+  }
+}
+
+/* ───────────────────────── Golgotha ───────────────────────── */
+{
+  const g = lump(3, 14, .16), p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    let y = p.getY(i); y = y < 0 ? y * .2 : y; let wy = y * 8.2;
+    if (wy > 6) wy = 6 + (wy - 6) * .3;
+    p.setXYZ(i, p.getX(i) * 17, wy - .4, p.getZ(i) * 14);
+  }
+  g.computeVertexNormals(); put('rock', g, mtx(GOLG.x, 0, GOLG.z, .4));
+}
+const CROSS_TOP = 6.3;
+for (const [dx, dz, h, ry] of [[0, 0, 7.2, 0], [-4.6, .9, 6.3, .16], [4.6, .9, 6.3, -.14]]) {
+  const x = GOLG.x + dx, z = GOLG.z + dz, y0 = CROSS_TOP - 1.6;
+  boxC('wood', x, y0, z, .34, h + 1.6, .3, ry);
+  boxC('wood', x, y0 + 1.6 + h * .72, z, 3.5, .28, .28, ry);
+}
+
+/* ───────────────────────── the garden tomb ───────────────────────── */
+{
+  const s = new THREE.Shape();
+  s.moveTo(-6.2, -1); s.lineTo(6.2, -1); s.lineTo(6.2, 5.8); s.lineTo(3.2, 6.4); s.lineTo(0, 6.1); s.lineTo(-3.4, 6.6); s.lineTo(-6.2, 6.0); s.closePath();
+  const hole = new THREE.Path(); hole.moveTo(-.82, 0); hole.lineTo(.82, 0); hole.lineTo(.82, 2.05); hole.lineTo(-.82, 2.05); hole.lineTo(-.82, 0);
+  s.holes.push(hole);
+  const f = new THREE.ExtrudeGeometry(s, { depth: 1.2, bevelEnabled: false }); f.translate(0, 0, -1.2);
+  put('rock', f, TOMB_M);
+  // the chamber: an inside-out box, seen only through the doorway
+  const ch = new THREE.BoxGeometry(3.8, 2.57, 3.4), ix = ch.index.array;
+  for (let i = 0; i < ix.length; i += 3) { const t = ix[i + 1]; ix[i + 1] = ix[i + 2]; ix[i + 2] = t; }
+  const nn = ch.attributes.normal; for (let i = 0; i < nn.count; i++) nn.setXYZ(i, -nn.getX(i), -nn.getY(i), -nn.getZ(i));
+  put('rock', ch, tombM(.4, 1.315, -2.96));
+  put('rock', BOX, tombM(1.5, .35, -2.95, 0, 1.4, .7, 3.2));                     // burial bench
+  put('linen', BOX, tombM(1.48, .74, -3.15, .04, 1.0, .07, 1.85));                 // the linen clothes lying
+  put('linen', BOX, tombM(1.55, .76, -4.25, .3, .42, .12, .32));                   // the napkin, folded by itself
+  put('rock', lump(8, 6, .2), tombM(-8.8, 2.2, -3.6, 0, 5, 5.2, 6.6));
+  put('rock', lump(9, 6, .2), tombM(8.9, 2.4, -3.6, 0, 5, 5.6, 6.6));
+  put('rock', lump(11, 6, .2), tombM(0, 1.5, -13, 0, 21, 9.5, 8.5));
+  put('rock', lump(12, 5, .22), tombM(-17, 1, -9, .4, 9, 5.5, 8));
+  put('rock', lump(13, 5, .22), tombM(17, 1, -8, -.3, 9, 6.5, 8));
+  // the channel, and the great stone rolled away
+  put('dark', BOX, tombM(-1.6, -.03, .55, 0, 7.2, .08, .8));
+  put('rock', BOX, tombM(-1.6, .14, 1.06, 0, 7.6, .3, .24));
+  put('rock', new THREE.CylinderGeometry(1.45, 1.45, .44, 24), tombM(-3.15, 1.45, .55, 0, 1, 1, 1, Math.PI / 2, .06));
+  // a low dry-stone garden wall
+  for (const [u0, n0, u1, n1] of [[-14, 1, -14, 19], [13, 1, 13, 17]]) for (let k = 0; k < 6; k++) {
+    const t0 = k / 6, t1 = (k + 1) / 6, a = tombPt(lerp(u0, u1, t0), 0, lerp(n0, n1, t0)), b = tombPt(lerp(u0, u1, t1), 0, lerp(n0, n1, t1));
+    boxC('rock', (a.x + b.x) / 2, -.1, (a.z + b.z) / 2, .7, R(.75, 1.05), a.distanceTo(b) + .1, Math.atan2(b.x - a.x, b.z - a.z) + R(-.04, .04));
+  }
+}
+{ // scattered limestone outcrops
+  const g = lump(21, 1, .3), list = [];
+  const rock = (x, z, s) => list.push(mtx(x, groundH(x, z) - s * .35, z, R(0, 6), s * R(.8, 1.4), s * R(.5, .9), s * R(.8, 1.3)));
+  for (let k = 0; k < 34; k++) { const a = R(0, 6.28), r = R(13, 21), x = GOLG.x + Math.cos(a) * r, z = GOLG.z + Math.sin(a) * r * .85; if (Math.hypot(x - MOURN[0], z - MOURN[1]) > 4 && CALM.every(([cx, cz]) => Math.hypot(x - cx, z - cz) > 4)) rock(x, z, R(.6, 2.2)); }
+  for (let k = 0; k < 40; k++) { const x = R(-260, -156), z = R(-160, 60); if (clearOf(x, z, 7)) rock(x, z, R(.5, 2.6)); }
+  for (const [u, n, s] of [[-11, 1.5, 1.4], [10.5, 1.2, 1.6], [-13, 8, .9], [12, 7, 1.1], [3.5, 3.2, .5], [-6.5, 2.4, .6]]) { const p = tombPt(u, 0, n); rock(p.x, p.z, s); }
+  const im = new THREE.InstancedMesh(g, MAT.rock, list.length); list.forEach((m, i) => im.setMatrixAt(i, m));
+  im.castShadow = im.receiveShadow = true; scene.add(im);
+}
+
+/* ───────────────────────── build merged batches ───────────────────────── */
+build('stone', MAT.stone); build('wall', MAT.stone, false, true); build('marble', MAT.marble); build('roof', MAT.roof); build('pave', MAT.pave, false, true);
+build('rock', MAT.rock); build('wood', MAT.wood); build('gold', MAT.gold); build('dark', MAT.dark, false, true); build('linen', MAT.linen, false, true);
+{ const im = new THREE.InstancedMesh(colGeo, MAT.marble, COLS.length); COLS.forEach((m, i) => im.setMatrixAt(i, m)); im.castShadow = im.receiveShadow = true; scene.add(im); }
+
+/* ───────────────────────── sky ───────────────────────── */
+const SKY = {
+  uTop: { value: new THREE.Color() }, uHor: { value: new THREE.Color() }, uSun: { value: new THREE.Color() },
+  uSunDir: { value: new THREE.Vector3(0, 1, 0) }, uSunVis: { value: 1 }, uGlow: { value: .5 }, uCloud: { value: .2 },
+  uStars: { value: 0 }, uTime: { value: 0 },
+};
+const sky = new THREE.Mesh(new THREE.SphereGeometry(1500, 32, 16), new THREE.ShaderMaterial({
+  uniforms: SKY, side: THREE.BackSide, depthWrite: false, fog: false, toneMapped: false,
+  vertexShader: `varying vec3 vDir; void main(){ vDir = position; vec4 p = projectionMatrix * modelViewMatrix * vec4(position, 1.0); gl_Position = p.xyww; }`,
+  fragmentShader: `
+    uniform vec3 uTop, uHor, uSun, uSunDir; uniform float uSunVis, uGlow, uCloud, uStars, uTime; varying vec3 vDir;
+    float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+    float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+      return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+vec2(1,1)), f.x), f.y); }
+    float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++){ v += a*n2(p); p = p*2.03 + vec2(1.7, 9.2); a *= 0.5; } return v; }
+    void main(){
+      vec3 d = normalize(vDir); float h = d.y;
+      vec3 col = mix(uHor, uTop, pow(clamp(h, 0.0, 1.0), 0.5));
+      float sd = max(dot(d, uSunDir), 0.0);
+      vec2 a2 = normalize(d.xz + 1e-4), s2 = normalize(uSunDir.xz + 1e-4);
+      float az = max(dot(a2, s2), 0.0), band = exp(-max(h, 0.0) * 5.0);
+      col += uSun * uGlow * (pow(az, 4.0) * band * 0.55 + pow(sd, 6.0) * 0.45);
+      if (uStars > 0.001 && h > 0.0) { vec3 q = d * 260.0; vec3 c = floor(q); float s = fract(sin(dot(c, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
+        col += vec3(0.8, 0.86, 1.0) * step(0.9975, s) * uStars * smoothstep(0.0, 0.25, h) * (0.5 + 0.5 * fract(s * 97.0)); }
+      if (h > 0.0) {
+        col += uSun * uSunVis * (smoothstep(0.99955, 0.99975, sd) * 6.0 + pow(sd, 220.0) * 1.2);
+        vec2 uv = d.xz / (h + 0.16) * 1.15 + vec2(uTime * 0.010, uTime * 0.003);
+        float n = fbm(uv), cov = smoothstep(0.62 - uCloud * 0.55, 0.95 - uCloud * 0.3, n);
+        vec3 cl = mix(mix(uTop, uHor, 0.55) * (0.62 + 0.25 * uCloud), uHor * 1.05 + uSun * (0.35 + pow(sd, 3.0) * 0.9) * (1.0 - uCloud * 0.75), smoothstep(0.35, 0.9, n) * (1.0 - uCloud * 0.6));
+        col = mix(col, cl, cov * smoothstep(0.0, 0.18, h) * (0.5 + 0.5 * uCloud));
+      } else col = uHor;
+      gl_FragColor = vec4(col, 1.0);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`,
+}));
+sky.renderOrder = -2; sky.frustumCulled = false; scene.add(sky);
+
+/* ───────────────────────── atmosphere: mist, light, dust, birds, flowers ───────────────────────── */
+const mistMat = new THREE.MeshBasicMaterial({ map: T.mist, alphaTest: .01, transparent: true, depthWrite: false, opacity: 0, color: 0xffffff });
+const mist = new THREE.Group();
+for (const [x, z, y, s, r] of [[-176, -44, .5, 70, 0], [-170, -24, 1.0, 56, 1.3], [-184, -58, .8, 64, 2.4], [-160, -36, 1.3, 50, 3.6]]) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(s, s), mistMat); m.rotation.set(-Math.PI / 2, 0, r); m.position.set(x, y, z); m.userData.y = y; mist.add(m);
+}
+scene.add(mist);
+const SUN_END = new THREE.Vector3();
+const sunDir = (az, el, out) => { const a = az * Math.PI / 180, e = el * Math.PI / 180; return out.set(Math.sin(a) * Math.cos(e), Math.sin(e), -Math.cos(a) * Math.cos(e)); };
+sunDir(80, 9.5, SUN_END);
+const shaftMat = new THREE.MeshBasicMaterial({ map: T.shaft, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false, opacity: 0, color: 0xffd9a0, side: THREE.DoubleSide });
+const shafts = new THREE.Group();
+{
+  const camEnd = tombPt(-1.8, 1.9, 8.2);
+  for (const [u, n, w] of [[-5.5, 3, 1.4], [-2.2, 5.5, 2.4], [1.5, 2.2, 1.1], [4.5, 6.5, 2.2], [-8.5, 8, 1.8], [7.5, 2.5, 1.5]]) {
+    const end = tombPt(u, .2, n), len = 34, ctr = end.clone().addScaledVector(SUN_END, len * .5);
+    const Y = SUN_END.clone().negate(), toCam = camEnd.clone().sub(ctr), Z = toCam.addScaledVector(Y, -toCam.dot(Y)).normalize(), X = new THREE.Vector3().crossVectors(Y, Z);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, len), shaftMat); m.matrixAutoUpdate = false;
+    m.matrix.makeBasis(X, Y, Z).setPosition(ctr); shafts.add(m);
+  }
+  const glow = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 2.4), new THREE.MeshBasicMaterial({ map: T.dot, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false, opacity: 0, color: 0xffcf96 }));
+  glow.matrixAutoUpdate = false; glow.matrix.copy(tombM(.45, 1.05, -1.6)); shafts.add(glow); shafts.userData.glow = glow;
+}
+scene.add(shafts);
+const DUST_N = 240, dustBase = new Float32Array(DUST_N * 3), dustPos = new Float32Array(DUST_N * 3);
+for (let i = 0; i < DUST_N; i++) { const p = tombPt(R(-6, 6), R(.2, 4.5), R(-.5, 9)); dustBase.set([p.x, p.y, p.z], i * 3); }
+const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ map: T.dot, size: .07, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xffe2b0, opacity: 0, fog: false }));
+dust.frustumCulled = false; scene.add(dust);
+{ // spring anemones in the garden
+  const pos = [], col = [], cols = [[.78, .1, .1], [.92, .9, .84], [.86, .68, .2], [.55, .3, .62], [.8, .12, .14]], c = new THREE.Color();
+  for (let i = 0; i < 420; i++) { const u = R(-13, 13), n = R(1.6, 24); if (u > -5.5 && u < 1 && n < 14) continue; const p = tombPt(u, .12, n); pos.push(p.x, groundH(p.x, p.z) + .12, p.z); const t = pick(cols); c.setRGB(t[0], t[1], t[2], THREE.SRGBColorSpace); col.push(c.r, c.g, c.b); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  var flowers = new THREE.Points(g, new THREE.PointsMaterial({ map: T.dot, size: .2, vertexColors: true, alphaTest: .45, color: 0xffffff }));
+  scene.add(flowers);
+}
+const BIRDS = 7, birdGeo = new THREE.BufferGeometry();
+birdGeo.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, .22, -.62, .3, -.08, 0, 0, -.16, 0, 0, .22, 0, 0, -.16, .62, .3, -.08], 3)); birdGeo.computeVertexNormals();
+const birds = new THREE.InstancedMesh(birdGeo, new THREE.MeshBasicMaterial({ color: 0x2b241f, side: THREE.DoubleSide }), BIRDS);
+birds.frustumCulled = false; birds.visible = false; scene.add(birds);
+const BIRD_C = tombPt(-1, 13, 2);
+
+/* ───────────────────────── the camera's route ───────────────────────── */
+// [progress, camera position, gaze point, hold?]  — one CatmullRom spline for the camera.
+const KEYS = [
+  [.000, [-44, 70, 150], [14, 8, -30], 1],
+  [.090, [-46, 66, 138], [10, 9, -36], 1],
+  [.170, [-52, 31, 38], [-34, 20, -92]],
+  [.215, [-61, 18, -58], [-42, 15, -98]],
+  [.255, [-55, 12.6, -88], [-110, 2, -84]],
+  [.285, [-67, 7.6, -88], [-110, 2.2, -82]],
+  [.310, [-80, 2.4, -87.5], [-112, 2.3, -78]],
+  [.345, [-91, 2.3, -84.6], [-114, 2.4, -74], 1],
+  [.385, [-98, 2.3, -80.6], [-122, 2.6, -71], 1],
+  [.425, [-114, 2.4, -73.4], [-140, 2.8, -73]],
+  [.455, [-134, 2.5, -72.8], [-156, 3.2, -74]],
+  [.480, [-150, 2.6, -74], [-170, 6, -72]],
+  [.510, [-160, 3.4, -58], [-182, 9, -70]],
+  [.545, [-172, 2.4, -47], [-181, 10, -70], 1],
+  [.620, [-173, 2.3, -45.4], [-181.5, 10.4, -70], 1],
+  [.690, [-173, 4.6, -42], [-120, 8, -46], 1],
+  [.790, [-172, 12.6, -29], [-110, 12, -38], 1],
+  [.865, [-170.5, 4.6, -27.5], tombPt(.4, .8, 0)],
+  [.900, [-168.8, 2.6, -22.5], tombPt(.4, .5, 0)],
+  [.930, tombPt(-2.2, 2.1, 10.5), tombPt(.35, .3, 0), 1],
+  [1.00, tombPt(-1.8, 1.9, 8.2), tombPt(.35, .2, 0), 1],
+].map(([p, a, b, h]) => ({ p, pos: a.isVector3 ? a : new THREE.Vector3(...a), look: b.isVector3 ? b : new THREE.Vector3(...b), hold: !!h }));
+function makePath(gentle) {
+  let P = KEYS.map((k) => k.pos.clone()), L = KEYS.map((k) => k.look.clone());
+  if (gentle) for (let pass = 0; pass < 2; pass++) { // reduced motion: soften swoops and turns
+    const P2 = P.map((v) => v.clone()), L2 = L.map((v) => v.clone());
+    for (let i = 1; i < P.length - 1; i++) if (!KEYS[i].hold) {
+      P2[i].multiplyScalar(.5).addScaledVector(P[i - 1], .25).addScaledVector(P[i + 1], .25);
+      L2[i].multiplyScalar(.5).addScaledVector(L[i - 1], .25).addScaledVector(L[i + 1], .25);
+    }
+    P = P2; L = L2;
+  }
+  return { cam: new THREE.CatmullRomCurve3(P, false, 'centripetal'), gaze: new THREE.CatmullRomCurve3(L, false, 'centripetal') };
+}
+const PATHS = { normal: makePath(false), gentle: makePath(true) };
+const pToT = monotone(KEYS.map((k) => k.p), KEYS.map((_, i) => i / (KEYS.length - 1)));
+const TOUR_SECONDS = 30;
+const tourP = monotone([0, 1.2, 4.6, 7, 9, 11.6, 13.2, 16.8, 19, 21.5, 24, 26.6, 28.2, 30],
+                       [0, .006, .12, .255, .33, .44, .53, .635, .70, .785, .865, .965, 1, 1]);
+
+/* ───────────────────────── light & colour script ───────────────────────── */
+const MOODS = [
+  { p: 0, az: 250, el: 14, sun: '#ffd08f', si: 5, sky: '#6187bb', hor: '#efc89a', hs: '#ffe3bd', hg: '#7a5c40', hi: 1.35, fog: .003, cloud: .2, sv: 1, glow: .55, exp: 1.05, gold: .55, mist: 0, shaft: 0, stars: 0, veil: 0, vig: .32, sh: 150 },
+  { p: .17, az: 252, el: 12, sun: '#ffc884', si: 4.6, sky: '#5a7fb2', hor: '#ecbd8c', hs: '#ffdcb0', hg: '#6e5038', hi: 1.4, fog: .0038, cloud: .22, sh: 110 },
+  { p: .26, az: 255, el: 9, sun: '#ffb373', si: 3.4, sky: '#4d6a94', hor: '#dca77a', hs: '#e9b88c', hg: '#4f3a2a', hi: 1.45, fog: .0075, cloud: .32, sv: .9, glow: .7, exp: 1, gold: .4, vig: .4, sh: 45 },
+  { p: .36, az: 258, el: 6, sun: '#ff9b5c', si: 2.6, sky: '#3d4a64', hor: '#c38a60', hs: '#c99a72', hg: '#3a2b20', hi: 1.4, fog: .011, cloud: .5, sv: .7, glow: .8, exp: 1, vig: .48, sh: 40 },
+  { p: .46, az: 262, el: 4, sun: '#d97a4e', si: 1.5, sky: '#2b3140', hor: '#7f604e', hs: '#8a6e5e', hg: '#261d17', hi: 1.05, fog: .015, cloud: .78, sv: .3, glow: .5, exp: .95, vig: .55, sh: 40 },
+  { p: .545, az: 340, el: 22, sun: '#9aa7ba', si: .55, sky: '#13151b', hor: '#383a40', hs: '#4a5262', hg: '#15120f', hi: .72, fog: .019, cloud: 1, sv: 0, glow: .3, exp: .85, gold: 0, vig: .62, sh: 45 },
+  { p: .62, hi: .62, glow: .22, si: .4 },
+  { p: .685, az: 200, el: -12, sun: '#000000', si: 0, sky: '#04060b', hor: '#0b0f17', hs: '#1b2333', hg: '#070709', hi: .3, fog: .022, cloud: .75, glow: 0, exp: .8, mist: .85, stars: .55, veil: .5, vig: .7 },
+  { p: .735, az: 85, el: -4, sun: '#5a70a8', sky: '#13213f', hor: '#4d6590', hs: '#4a6494', hg: '#13171f', hi: .6, fog: .016, cloud: .45, glow: .3, exp: .9, mist: 1, stars: .45, veil: .06, vig: .55 },
+  { p: .785, az: 83, el: 3, sun: '#ff8a52', si: .8, sky: '#2a4a80', hor: '#d99178', hs: '#8fa4cc', hg: '#2a2630', hi: .9, fog: .011, cloud: .35, sv: .9, glow: 1, exp: 1, mist: .85, stars: .08, veil: 0, vig: .45, sh: 34 },
+  { p: .845, az: 81, el: 7, sun: '#ffaa66', si: 3.3, sky: '#4c7ab7', hor: '#f2b78e', hs: '#ffd3aa', hg: '#4a3a2e', hi: 1.35, fog: .0075, cloud: .25, sv: 1, glow: .9, exp: 1.05, gold: .3, mist: .5, shaft: .65, stars: 0, vig: .38, sh: 30 },
+  { p: .925, az: 80, el: 9, sun: '#ffca8e', si: 4.1, sky: '#6593cf', hor: '#f9d0a6', hs: '#ffe4c4', hg: '#5c4a38', hi: 1.6, fog: .0048, cloud: .18, glow: .7, exp: 1.08, mist: .2, shaft: 1, vig: .32, sh: 26 },
+  { p: 1, az: 80, el: 10, sun: '#ffd49c', si: 4.3, sky: '#6b9ad4', hor: '#fbd8b2', hs: '#ffe8cc', hg: '#5e4c3a', hi: 1.65, fog: .0042, cloud: .16, mist: .12 },
+];
+const CK = ['sun', 'sky', 'hor', 'hs', 'hg'], NK = Object.keys(MOODS[0]).filter((k) => !CK.includes(k) && k !== 'p');
+for (let i = 1; i < MOODS.length; i++) for (const k in MOODS[0]) if (MOODS[i][k] === undefined) MOODS[i][k] = MOODS[i - 1][k];
+for (const m of MOODS) for (const k of CK) m[k] = new THREE.Color(m[k]);
+const N = {}, Cc = {}; for (const k of CK) Cc[k] = new THREE.Color();
+const SUN = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0);
+const veil = $('#veil'), vig = $('#vig'), shade = $('#shade');
+let flash = 0;
+function applyMood(p) {
+  let i = 0; while (i < MOODS.length - 2 && p > MOODS[i + 1].p) i++;
+  const a = MOODS[i], b = MOODS[i + 1], t = sstep((p - a.p) / (b.p - a.p));
+  for (const k of NK) N[k] = lerp(a[k], b[k], t);
+  for (const k of CK) Cc[k].lerpColors(a[k], b[k], t);
+  sunDir(N.az, N.el, SUN);
+  sun.color.copy(Cc.sun); sun.intensity = N.si;
+  hemi.color.copy(Cc.hs); hemi.groundColor.copy(Cc.hg); hemi.intensity = N.hi;
+  scene.fog.color.copy(Cc.hor); scene.fog.density = N.fog;
+  SKY.uTop.value.copy(Cc.sky); SKY.uHor.value.copy(Cc.hor); SKY.uSun.value.copy(Cc.sun); SKY.uSunDir.value.copy(SUN);
+  SKY.uSunVis.value = N.sv; SKY.uGlow.value = N.glow; SKY.uCloud.value = N.cloud; SKY.uStars.value = N.stars;
+  renderer.toneMappingExposure = N.exp;
+  MAT.gold.emissiveIntensity = N.gold;
+  for (const m of hills) { const k = clamp(m.userData.k + N.fog * 22, 0, 1); m.material.color.copy(Cc.hor).multiplyScalar(.6 + .4 * k).lerp(Cc.sky, .1 * (1 - k)); }
+  mist.visible = N.mist > .01; mistMat.opacity = N.mist * .36; mistMat.color.copy(Cc.hor).lerp(UPCOL, .3);
+  for (const m of mist.children) m.position.y = m.userData.y + (1 - N.mist) * .7;
+  shafts.visible = dust.visible = N.shaft > .01;
+  shaftMat.opacity = N.shaft * .13; shaftMat.color.copy(Cc.sun); shafts.userData.glow.material.opacity = N.shaft * .45;
+  dust.material.opacity = N.shaft * .85;
+  MAT.linen.emissiveIntensity = .25 + N.shaft * .9;
+  flowers.material.color.setScalar(clamp(N.hi * .42 + N.si * .07, .04, 1));
+  birds.visible = p > .84;
+  veil.style.opacity = Math.min(1, N.veil + flash).toFixed(3);
+  vig.style.opacity = N.vig.toFixed(3);
+}
+const UPCOL = new THREE.Color(1, 1, 1);
+const _f = new THREE.Vector3(), _c = new THREE.Vector3(), _r = new THREE.Vector3(), _u = new THREE.Vector3();
+function placeSun(size) {
+  camera.getWorldDirection(_f); _f.y = 0; _f.normalize();
+  _c.copy(camera.position).addScaledVector(_f, size * .62); _c.y = 0;
+  _r.crossVectors(UP, SUN).normalize(); _u.crossVectors(SUN, _r);
+  const tx = 2 * size / SHADOW, a = Math.round(_c.dot(_r) / tx) * tx, b = Math.round(_c.dot(_u) / tx) * tx, d = _c.dot(SUN);
+  _c.copy(_r).multiplyScalar(a).addScaledVector(_u, b).addScaledVector(SUN, d);
+  sun.target.position.copy(_c); sun.position.copy(_c).addScaledVector(SUN, 350); sun.target.updateMatrixWorld();
+  const sc = sun.shadow.camera;
+  if (Math.abs(sc.right - size) > .01) { sc.left = sc.bottom = -size; sc.right = sc.top = size; sc.updateProjectionMatrix(); }
+  renderer.shadowMap.needsUpdate = sun.intensity > .05;
+}
+
+/* ───────────────────────── words on screen ───────────────────────── */
+const caps = [...document.querySelectorAll('.cap')], title = $('#title'), inter = $('#interlude'), hint = $('#hint'), railFill = $('#rail b');
+const WIN = [[.012, .032, .14, .17], [.275, .3, .42, .445], [.525, .55, .625, .65], [.895, .925, 9, 9]];
+const win = (p, [a, b, c, d]) => p <= a || p >= d ? 0 : p < b ? sstep((p - a) / (b - a)) : p > c ? 1 - sstep((p - c) / (d - c)) : 1;
+const shown = new Map();
+function setO(el, o, lift = 0) {
+  const prev = shown.get(el); if (prev !== undefined && Math.abs(prev - o) < .002) return; shown.set(el, o);
+  el.style.opacity = o.toFixed(3); el.style.visibility = o < .002 ? 'hidden' : 'visible';
+  if (lift) el.style.transform = `translateX(-50%) translateY(${reduced ? 0 : ((1 - o) * lift).toFixed(1)}px)`;
+}
+function updateText(p) {
+  let mx = 0;
+  caps.forEach((el, i) => { const o = win(p, WIN[i]); mx = Math.max(mx, o); setO(el, o, 14); });
+  setO(title, win(p, [-1, -.5, .03, .065]));
+  setO(inter, win(p, [.655, .69, .77, .80]));
+  setO(hint, tour ? 0 : win(p, [-1, -.5, .004, .02]));
+  setO(shade, mx * .9);
+  railFill.style.transform = `scaleY(${p.toFixed(4)})`;
+}
+
+/* ───────────────────────── scroll, tour & input ───────────────────────── */
+let pTarget = 0, pCur = 0, tour = null, ignoreUntil = 0;
+const playBtn = $('#play');
+const maxScroll = () => Math.max(1, document.documentElement.scrollHeight - innerHeight);
+const readScroll = () => { pTarget = clamp(scrollY / maxScroll(), 0, 1); };
+function startTour() {
+  if (tour) return;
+  if (pCur > .02) flash = 1;
+  tour = { t0: performance.now() };
+  html.classList.add('touring');
+  ignoreUntil = performance.now() + 250; window.scrollTo(0, 0);
+  pTarget = pCur = 0;
+}
+function endTour() {
+  if (!tour) return;
+  tour = null; html.classList.remove('touring');
+  ignoreUntil = performance.now() + 250; window.scrollTo(0, pCur * maxScroll());
+  pTarget = pCur;
+}
+playBtn.addEventListener('click', startTour);
+addEventListener('scroll', () => { if (tour) { if (performance.now() > ignoreUntil) endTour(); return; } readScroll(); }, { passive: true });
+for (const ev of ['wheel', 'touchstart']) addEventListener(ev, () => endTour(), { passive: true });
+addEventListener('pointerdown', (e) => { if (e.target !== playBtn) endTour(); });
+addEventListener('keydown', (e) => { if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' ', 'Escape'].includes(e.key)) endTour(); });
+RMQ.addEventListener?.('change', (e) => { reduced = e.matches; });
+
+/* ───────────────────────── sizing ───────────────────────── */
+function resize() {
+  let w = innerWidth, h = innerHeight;
+  if (VERTICAL) { w = Math.floor(Math.min(w, h * 9 / 16)); h = Math.floor(w * 16 / 9); frame.style.width = w + 'px'; frame.style.height = h + 'px'; }
+  else { w = frame.clientWidth || w; h = frame.clientHeight || h; }
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.fov = clamp(2 * Math.atan(Math.tan(22 * Math.PI / 180) / camera.aspect) * 180 / Math.PI, 50, 74);
+  camera.updateProjectionMatrix();
+  if (!tour) readScroll();
+}
+addEventListener('resize', resize);
+if ('ResizeObserver' in window) new ResizeObserver(resize).observe(frame);
+resize();
+
+/* ───────────────────────── frame loop ───────────────────────── */
+const camPos = new THREE.Vector3(), gaze = new THREE.Vector3(), _bm = new THREE.Matrix4(), _bq = new THREE.Quaternion(), _bp = new THREE.Vector3(), _bs = new THREE.Vector3();
+let last = performance.now(), perfAcc = 0, perfN = 0, lastAdj = 0;
+const born = performance.now();
+function frameLoop(now) {
+  const dtRaw = Math.min(.1, (now - last) / 1000), dt = Math.min(.05, dtRaw); last = now;
+  const time = (now - born) / 1000;
+  if (tour) {
+    const el = (now - tour.t0) / 1000;
+    pCur = tourP(Math.min(el, TOUR_SECONDS));
+    if (el >= TOUR_SECONDS) { pCur = 1; endTour(); }
+  } else {
+    pCur += (pTarget - pCur) * (1 - Math.exp(-dt * (reduced ? 3 : 4.5)));
+    if (Math.abs(pTarget - pCur) < 1e-5) pCur = pTarget;
+  }
+  flash = Math.max(0, flash - dt * 1.4);
+  const p = pCur, t = pToT(p), path = reduced ? PATHS.gentle : PATHS.normal;
+  path.cam.getPoint(t, camPos); path.gaze.getPoint(t, gaze);
+  if (!reduced) {
+    const d = camPos.distanceTo(gaze) * .004;
+    gaze.x += Math.sin(time * .37) * d; gaze.y += Math.sin(time * .29 + 1.3) * d * .6; gaze.z += Math.cos(time * .31) * d;
+    camPos.y += Math.sin(time * .5) * .03;
+  }
+  camera.position.copy(camPos); camera.lookAt(gaze);
+  applyMood(p); placeSun(N.sh); updateText(p);
+  SKY.uTime.value = time; sky.position.copy(camera.position);
+  if (dust.visible) {
+    for (let i = 0; i < DUST_N; i++) {
+      const k = i * 3;
+      dustPos[k] = dustBase[k] + Math.sin(time * .21 + i * 1.3) * .3;
+      dustPos[k + 1] = dustBase[k + 1] + Math.sin(time * .17 + i * .7) * .35;
+      dustPos[k + 2] = dustBase[k + 2] + Math.cos(time * .19 + i) * .3;
+    }
+    dustGeo.attributes.position.needsUpdate = true;
+  }
+  if (birds.visible) {
+    for (let i = 0; i < BIRDS; i++) {
+      const a = time * .2 + i * .85, r = 15 + (i % 3) * 4.5;
+      _bp.set(BIRD_C.x + Math.cos(a) * r, BIRD_C.y + Math.sin(a * 1.6 + i) * 1.4 + i * .35, BIRD_C.z + Math.sin(a) * r * .6);
+      _bq.setFromAxisAngle(UP, Math.atan2(-Math.sin(a), Math.cos(a) * .6));
+      const f = Math.sin(time * 8 + i * 1.7); _bs.set(.9, f * .9, .9);
+      birds.setMatrixAt(i, _bm.compose(_bp, _bq, _bs));
+    }
+    birds.instanceMatrix.needsUpdate = true;
+  }
+  renderer.render(scene, camera);
+  if (now - born > 4000) { // adaptive resolution: protect 60fps on modest phones
+    perfAcc += dtRaw; perfN++;
+    if (perfN >= 90) {
+      if (perfAcc / perfN > .0215 && DPR > 1 && now - lastAdj > 2500) { DPR = Math.max(1, DPR - .25); renderer.setPixelRatio(DPR); resize(); lastAdj = now; }
+      perfAcc = perfN = 0;
+    }
+  }
+}
+
+/* ───────────────────────── start ───────────────────────── */
+readScroll(); pCur = pTarget;
+birds.visible = shafts.visible = dust.visible = mist.visible = true;
+applyMood(pCur); placeSun(N.sh);
+renderer.compile(scene, camera);
+renderer.setAnimationLoop(frameLoop);
+requestAnimationFrame(() => requestAnimationFrame(() => $('#loader').classList.add('done')));
+</script>
+</body>
+</html>
